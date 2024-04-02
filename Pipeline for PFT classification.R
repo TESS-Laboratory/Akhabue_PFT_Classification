@@ -47,7 +47,7 @@ Categorical_table<- Categorical_table %>% dplyr::select(one_of(vars))
 
 
 # Sort the unique species ----
-# Count the occurrences of each species
+# Count the occurrences of each species from my observation
 species_count <- Trait_species %>%
   group_by(AccSpeciesName) %>%
   summarise(count = n()) %>%
@@ -57,4 +57,40 @@ species_count <- Trait_species %>%
 print(nrow(species_count))
 
 
+# Sort unique values for the other variables in the categorical table eg leaf type, plant growth form, leaf phenology, photosynthetic pathway
+# this is to know the different variables and their individual count
+# this is also import for QC to help indicate for duplicates and solve that problem
 
+species_count_TRY <- Categorical_table %>%
+  group_by(AccSpeciesName) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+PlantGrowthForm <- Categorical_table %>%
+  group_by(PlantGrowthForm) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+LeafType <- Categorical_table %>%
+  group_by(LeafType) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+LeafPhenology <- Categorical_table %>%
+  group_by(LeafPhenology) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+PhotosyntheticPathway <- Categorical_table %>%
+  group_by(PhotosyntheticPathway) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+
+
+
+# group species into different PFT classes
+# At this stage I will combine theBET-Tr (tropical broadleaf evergreen trees), and
+# BET-Te (temperate broadleaf evergreen trees) together. Because I will need the GeoLoc to group into temp and tropical
+
+# Create a new df, sorting out based on the following criteria LeafType, PlantGrowtForm, LeafPhenology, PhotosynthicPathway (This may not be essential for all the PFT classes; just the grasses)
