@@ -1,7 +1,7 @@
 # Pipeline----
-# read in lookup data for categorical traits
-# clean the data by removing the columns you don't need.
-# read in trait data
+#  ✓ read in lookup data for categorical traits
+#  ✓ clean the data by removing the columns you don't need.
+#  ✓ read in trait data
 # sort by species, to determine the species you have and how many species your observation covers
 
 
@@ -36,7 +36,7 @@ library(tidyverse)
 library(dplyr)
 
 # Read the trait data file and the look up table ----
-Trait_species <- read.csv("workdata_traits.csv")
+Trait_species <- read.csv("trait_data.csv")
 Categorical_table <- read.csv("TRY_Categorical_Traits_Lookup_Table.csv")
 
 # Keep only the columns we need for the categorical look up table
