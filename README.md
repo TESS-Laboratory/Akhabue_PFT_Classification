@@ -1,0 +1,1 @@
+Repo for species classification into different PFT classes in JULES. The species data is from the TRY data base. I am using the categorical table available in JULES to do most of this classification (where available). 
