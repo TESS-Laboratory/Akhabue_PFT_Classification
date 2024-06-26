@@ -74,7 +74,12 @@ species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Termina
                         "Cremaspora triflora", "Englerodendron usambarense", "Entada abyssinica", "Entandrophragma caudatum", "Kirkia tenuifolia", "Lannea humilis",
                         "Lannea schimperi", "Lannea triphylla", "Prosopis chilensis", "Koelpinia linearis", "Malvastrum coromandelianum", "Solanum dulcamara",
                         "Ocimum americanum", "Leptadenia pyrotechnica", "Grewia caffra", "Cissus quadrangularis", "Capparis tomentosa", "Rhoicissus tridentata",
-                        "Rubus apetalus")
+                        "Rubus apetalus", "Bauhinia rufescens", "Maerua endlichii", "Bauhinia reticulata", "Canthium glaucum", "Combretum exalatum", 
+                        "Dichapetalum crassifolium", "Echinops spinosissimus", "Grewia tenax", "Calligonum polygonoides", "Combretum celastroides", 
+                        "Lannea alata", "Sorindeia juglandifolia", "Tephrosia polystachya", "Zornia glochidiata", "Plantago ovata", "Achillea leptophylla", 
+                        "Galinsoga parviflora", "Oxalis corniculata", "Acanthospermum hispidum", "Launaea cornuta", "Argemone mexicana", 
+                        "Zaluzianskya villosa", "Chenopodium album", "Nicandra physalodes", "Acaena magellanica", "Lablab purpureus", 
+                        "Peganum harmala", "Adenia volkensii", "Cucumis melo", "Reichardia tingitana", "Vigna unguiculata", "Watsonia borbonica")
                         
                         
 
@@ -122,7 +127,31 @@ species_to_update4 <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mamme
                         "Helianthemum lippii", "Gymnosporia senegalensis", "Pseudarthria hookeri", "Aspilia mossambicensis", "Stylosanthes fruticosa", 
                         "Piper capense", "Pauridiantha paucinervis", "Dracaena fragrans", "Carissa spinarum", "Rhoicissus tomentosa", "Capparis sepiaria", 
                         "Lantana camara", "Cassinopsis ilicifolia", "Cliffortia ruscifolia", "Penaea mucronata", "Protea lepidocarpodendron", "Combretum paniculatum",
-                        "Phytolacca dodecandra", "Cyphostemma adenocaule", "Pisonia aculeata", "Rhaphiostylis beninensis", "Gardenia erubescens", "Apodostigma pallens")
+                        "Phytolacca dodecandra", "Cyphostemma adenocaule", "Pisonia aculeata", "Rhaphiostylis beninensis", "Gardenia erubescens", "Apodostigma pallens", 
+                        "Capparis erythrocarpos", "Cissus producta", "Dovyalis macrocalyx", "Keetia gueinzii", "Salacia congolensis", "Salacia elegans",
+                        "Salacia erecta", "Acalypha bipartita", "Acalypha fruticosa", "Anisotes sessiliflorus", "Artabotrys monteiroae", "Azima tetracantha", 
+                        "Carissa tetramera", "Carpolobia goetzei", "Cissus populnea", "Coptosperma graveolens", "Deinbollia oblongifolia", "Dovyalis caffra",
+                        "Erythrococca bongensis", "Ficus asperifolia", "Gossypioides kirkii", "Jasminum dichotomum", "Keetia venosa", "Landolphia kirkii", 
+                        "Lindackeria bukobensis", "Mussaenda arcuata", "Pseudospondias microcarpa", "Ruschia karrooica", "Salacia madagascariensis",
+                        "Strychnos lucens", "Thecacoris spathulifolia", "Uvaria acuminata", "Vernonia brachycalyx", "Whitfieldia elongata", "Acanthosicyos horridus", 
+                        "Allocassine laurifolia", "Cajanus cajan", "Commiphora rostrata", "Enarganthe octonaria", "Ephedra alata", "Salacia chlorantha", 
+                        "Xylotheca kraussiana", "Erythrococca polyandra", "Grewia forbesii", "Grewia holstii", "Anthospermum herbaceum", "Eruca vesicaria", 
+                        "Plantago albicans", "Oxalis obliquifolia", "Bidens pilosa", "Senna tora", "Stellaria media", "Pilea usambarensis", "Kohautia caespitosa",
+                        "Phyllanthus odontadenius", "Cleome gynandra", "Thunbergia alata", "Disperis dicerochila", "Pelargonium capitatum",
+                        "Pelargonium rapaceum", "Pelargonium carnosum", "Pelargonium triste", "Pelargonium myrrhifolium", "Droguetia iners",
+                        "Pelargonium betulinum", "Solanum nigrum", "Pelargonium crithmifolium", "Pelargonium echinatum", "Pelargonium citronellum", 
+                        "Pelargonium grandicalcaratum", "Pelargonium scabroide", "Pelargonium senecioides", "Anthospermum aethiopicum", 
+                        "Pelargonium magenteum", "Pelargonium alternans", "Zantedeschia aethiopica", "Thamnochortus cinereus", 
+                        "Hypoestes aristata", "Pelargonium candicans", "Pelargonium reflexipetalum", "Pelargonium articulatum", 
+                        "Pelargonium asarifolium", "Pelargonium chamaedryfolium", "Pelargonium cordifolium", "Pelargonium karooicum", 
+                        "Pelargonium longifolium", "Pelargonium oblongatum", "Pelargonium papilionaceum", "Pelargonium scabrum", 
+                        "Pelargonium sericifolium", "Pelargonium ternatum", "Pelargonium ternifolium", "Montia fontana", 
+                        "Pelargonium alchemilloides", "Pelargonium anethifolium", "Pelargonium cucullatum", "Pelargonium grossularioides", 
+                        "Pelargonium lobatum", "Pelargonium pinnatum", "Pelargonium zonale", "Pelargonium columbinum", "Pelargonium pillansii", 
+                        "Pelargonium radulifolium", "Pelargonium stipulaceum", "Chamaecrista absus", "Pelargonium antidysentericum", 
+                        "Pelargonium dasyphyllum", "Pelargonium exstipulatum", "Pelargonium praemorsum", "Pelargonium incrassatum", 
+                        "Asparagus officinalis", "Basella alba", "Callitriche antarctica", "Ipomoea coptica", "Ipomoea hochstetteri", "Pancratium maritimum", 
+                        "Plumbago zeylanica", "Syncarpha vestita", "Tribulus terrestris", "Zehneria minutiflora", "Aristea capitata")
                         
 
 
@@ -149,6 +178,12 @@ species_to_updateShrubs <- c("Lycium shawii", "Haloxylon scoparium", "Helianthem
 species_to_updateGrasses <- c()
 
 species_to_updateClimbers <- c()
+
+
+
+
+
+
 
 
 
