@@ -85,19 +85,16 @@ PlantGrowthForm <- matched_data %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
+
+
+matched_data$LeafType[which(matched_data$LeafType == "")] <- "broadleaved"
+
 LeafType <- matched_data %>%
   group_by(LeafType) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
-matched_data$LeafType[which(matched_data$LeafType == "")] <- "broadleaved"
 
-
-
-LeafPhenology <- matched_data %>%
-  group_by(LeafPhenology) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
 
 
 species_to_update1 <- c("Baikiaea plurijuga", "Brachystegia longifolia", "Brachystegia spiciformis", 
@@ -122,14 +119,13 @@ matched_data <- matched_data %>%
                                 "evergreen", LeafPhenology))
 
 
-
-
-
-
-PhotosyntheticPathway <- matched_data %>%
-  group_by(PhotosyntheticPathway) %>%
+LeafPhenology <- matched_data %>%
+  group_by(LeafPhenology) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
+
+
+
 
 matched_data <- matched_data %>%
   mutate(PhotosyntheticPathway = ifelse(AccSpeciesName =="Chenopodium album" & PhotosyntheticPathway == "C3/C4",
@@ -160,6 +156,11 @@ species_to_update6 <- c("Andropogon pinguipes", "Aristida adoensis", "Carex aeth
 matched_data <- matched_data %>% 
   mutate (PhotosyntheticPathway = ifelse(AccSpeciesName %in% species_to_update6 & PhotosyntheticPathway == "", 
                                          "C4", PhotosyntheticPathway))
+
+PhotosyntheticPathway <- matched_data %>%
+  group_by(PhotosyntheticPathway) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
 
 
 # group species into different PFT classes
