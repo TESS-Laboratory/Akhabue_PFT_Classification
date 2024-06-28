@@ -79,7 +79,11 @@ species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Termina
                         "Lannea alata", "Sorindeia juglandifolia", "Tephrosia polystachya", "Zornia glochidiata", "Plantago ovata", "Achillea leptophylla", 
                         "Galinsoga parviflora", "Oxalis corniculata", "Acanthospermum hispidum", "Launaea cornuta", "Argemone mexicana", 
                         "Zaluzianskya villosa", "Chenopodium album", "Nicandra physalodes", "Acaena magellanica", "Lablab purpureus", 
-                        "Peganum harmala", "Adenia volkensii", "Cucumis melo", "Reichardia tingitana", "Vigna unguiculata", "Watsonia borbonica")
+                        "Peganum harmala", "Adenia volkensii", "Cucumis melo", "Reichardia tingitana", "Vigna unguiculata", "Watsonia borbonica", "Pouteria alnifolia", 
+                        "Triplochiton scleroxylon", "Rubus steudneri", "Nesogordonia papaverifera", "Ocimum obovatum", "Sterculia rhinopetala", 
+                        "Dalbergia baronii", "Pancovia harmsiana", "Sterculia oblonga", "Pericopsis laxiflora", "Pancovia laurentii", "Terminalia kilimandscharica",
+                        "Pterygota macrocarpa", "Vitex welwitschii", "Loeseneriella africana", "Strychnos spinosa", "Gilletiodendron mildbraedii", "Paullinia pinnata", 
+                        "Combretum aculeatum", "Parkia bicolor", "Dalbergia obovata")
                         
                         
 
@@ -142,16 +146,28 @@ species_to_update4 <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mamme
                         "Pelargonium betulinum", "Solanum nigrum", "Pelargonium crithmifolium", "Pelargonium echinatum", "Pelargonium citronellum", 
                         "Pelargonium grandicalcaratum", "Pelargonium scabroide", "Pelargonium senecioides", "Anthospermum aethiopicum", 
                         "Pelargonium magenteum", "Pelargonium alternans", "Zantedeschia aethiopica", "Thamnochortus cinereus", 
-                        "Hypoestes aristata", "Pelargonium candicans", "Pelargonium reflexipetalum", "Pelargonium articulatum", 
-                        "Pelargonium asarifolium", "Pelargonium chamaedryfolium", "Pelargonium cordifolium", "Pelargonium karooicum", 
-                        "Pelargonium longifolium", "Pelargonium oblongatum", "Pelargonium papilionaceum", "Pelargonium scabrum", 
-                        "Pelargonium sericifolium", "Pelargonium ternatum", "Pelargonium ternifolium", "Montia fontana", 
-                        "Pelargonium alchemilloides", "Pelargonium anethifolium", "Pelargonium cucullatum", "Pelargonium grossularioides", 
+                        "Hypoestes aristata", "Pelargonium candicans", "Pelargonium reflexipetalum", "Pelargonium articulatum",  "Pelargonium asarifolium", 
+                        "Pelargonium chamaedryfolium", "Pelargonium cordifolium", "Pelargonium karooicum", "Pelargonium longifolium", "Pelargonium oblongatum", 
+                        "Pelargonium papilionaceum", "Pelargonium scabrum", "Pelargonium sericifolium", "Pelargonium ternatum", "Pelargonium ternifolium", 
+                        "Montia fontana", "Pelargonium alchemilloides", "Pelargonium anethifolium", "Pelargonium cucullatum", "Pelargonium grossularioides", 
                         "Pelargonium lobatum", "Pelargonium pinnatum", "Pelargonium zonale", "Pelargonium columbinum", "Pelargonium pillansii", 
                         "Pelargonium radulifolium", "Pelargonium stipulaceum", "Chamaecrista absus", "Pelargonium antidysentericum", 
                         "Pelargonium dasyphyllum", "Pelargonium exstipulatum", "Pelargonium praemorsum", "Pelargonium incrassatum", 
                         "Asparagus officinalis", "Basella alba", "Callitriche antarctica", "Ipomoea coptica", "Ipomoea hochstetteri", "Pancratium maritimum", 
-                        "Plumbago zeylanica", "Syncarpha vestita", "Tribulus terrestris", "Zehneria minutiflora", "Aristea capitata")
+                        "Plumbago zeylanica", "Syncarpha vestita", "Tribulus terrestris", "Zehneria minutiflora", "Aristea capitata", "Protea cynaroides", 
+                        "Notoceras bicorne", "Protea punctata", "Protea mundii", "Protea longifolia", "Scorodophloeus zenkeri", "Melhania velutina", 
+                        "Protea eximia", "Protea coronata", "Helichrysum newii", "Senecio maranguensis", "Culcasia falcifolia", 
+                        "Protea magnifica", "Protea nana", "Gymnosporia buxifolia", "Helichrysum odoratissimum", "Erigeron bonariensis", "Cola gigantea",
+                        "Protea acuminata", "Protea lorifolia", "Chrysophyllum boivinianum", "Plectranthus lasianthus", "Tridesmostemon omphalocarpoides", 
+                        "Melianthus major", "Blighia welwitschii", "Tessmannia africana", "Strombosia grandifolia", "Trichilia monadelpha", 
+                        "Detarium senegalense", "Quassia undulata", "Vitex grandifolia", "Hymenostegia afzelii", "Strombosiopsis tetrandra", "Chrysophyllum africanum",
+                        "Plectranthus autranii", "Rourea thomsonii", "Laurophyllus capensis", "Protea aurea", "Trichocladus ellipticus", "Strombosia pustulata", 
+                        "Leucadendron salicifolium", "Polygala myrtifolia", "Synsepalum subcordatum", "Turraeanthus africanus", "Solanum linnaeanum", 
+                        "Buddleja saligna", "Ongokea gore", "Synsepalum brevipes", "Virgilia oroboides", "Mansonia altissima", "Pringlea antiscorbutica", 
+                        "Chrysophyllum lacourtianum", "Nuxia capitata", "Polyscias ornifolia", "Prioria oxyphylla", "Schotia brachypetala", "Pavetta abyssinica", 
+                        "Morella serrata", "Monanthotaxis caffra", "Pterocarpus soyauxii", "Inhambanella henriquezii", "Paraserianthes lophantha", "Athanasia trifurcata", 
+                        "Vepris trichocarpa", "Cornus volkensii", "Passerina paleacea", "Labramia louvelii", "Opilia amentacea", "Erica hispidula",
+                        "Griffonia simplicifolia", "Cissus verticillata", "Paramacrolobium coeruleum", "Urera hypselodendron")
                         
 
 
@@ -166,14 +182,49 @@ matched_data <- matched_data %>%
 
 
 
-
-
-
-
 #FOR THE PLANT GROWTH FORM
-species_to_updateTrees <- c("Vitellaria paradoxa", )
+species_to_updateTrees <- c("Vitellaria paradoxa", "Pouteria alnifolia", "Scorodophloeus zenkeri", "Triplochiton scleroxylon", "Gymnosporia buxifolia", 
+                            "Nesogordonia papaverifera", "Cola gigantea", "Blighia sapida", "Chrysophyllum boivinianum", "Cryptocarya thouvenotii",
+                            "Tridesmostemon omphalocarpoides", "Blighia welwitschii", "Tessmannia africana", "Ocotea racemosa", "Strombosia grandifolia", 
+                            "Trichilia monadelpha", "Detarium senegalense", "Quassia undulata", "Vitex grandifolia", "Sterculia rhinopetala", "Faidherbia albida", 
+                            "Dalbergia baronii", "Hymenostegia afzelii", "Beilschmiedia velutina", "Ocotea auriculiformis", "Sterculia oblonga", "Strombosiopsis tetrandra",
+                            "Chrysophyllum africanum", "Trichocladus ellipticus", "Strombosia pustulata", "Terminalia kilimandscharica", "Turraeanthus africanus", 
+                            "Buddleja saligna", "Ongokea gore", "Pterygota macrocarpa", "Synsepalum brevipes", "Virgilia oroboides", "Mansonia altissima", "Vitex welwitschii",
+                            "Chrysophyllum lacourtianum", "Nuxia capitata", "Prioria oxyphylla", "Schotia brachypetala", "Strychnos spinosa", "Pentaclethra macrophylla", 
+                            "Monanthotaxis caffra", "Pterocarpus soyauxii", "Elaeodendron transvaalense", "Tabernaemontana crassa", "Inhambanella henriquezii", 
+                            "Paraserianthes lophantha", "Vepris trichocarpa", "Cornus volkensii", "Gilletiodendron mildbraedii", "Pouteria adolfi-friedericii",
+                            "Labramia louvelii", "Saba comorensis", "Napoleonaea imperialis", "Parkia bicolor", "Landolphia owariensis", "Paramacrolobium coeruleum")
+                            
 
-species_to_updateShrubs <- c("Lycium shawii", "Haloxylon scoparium", "Helianthemum lippii", "Gymnosporia senegalensis", "Koelpinia linearis")
+
+
+matched_data <- matched_data %>%
+  mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateTrees & PlantGrowthForm == "", 
+                                "tree", PlantGrowthForm))
+
+
+
+species_to_updateShrubs <- c("Lycium shawii", "Haloxylon scoparium", "Helianthemum lippii", "Gymnosporia senegalensis", "Koelpinia linearis", "Protea cynaroides", 
+                             "Notoceras bicorne", "Protea punctata", "Protea mundii", "Protea longifolia", "Melhania velutina", "Protea eximia", "Protea coronata", 
+                             "Rubus steudneri", "Helichrysum newii", "Astragalus armatus", "Conyza pyrrhopappa", "Senecio maranguensis", "Crassula pellucida", 
+                             "Culcasia falcifolia", "Protea magnifica", "Protea nana", "Helichrysum odoratissimum", "Erigeron bonariensis", "Protea acuminata",
+                             "Ocimum obovatum", "Protea lorifolia", "Plectranthus lasianthus", "Melianthus major", "Hyptis suaveolens", "Pancovia harmsiana", 
+                             "Pericopsis laxiflora", "Pancovia laurentii", "Plectranthus autranii", "Rourea thomsonii", "Laurophyllus capensis", "Protea aurea",
+                             "Leucadendron salicifolium", "Polygala myrtifolia", "Syncarpha argyropsis", "Synsepalum subcordatum", "Solanum linnaeanum", 
+                             "Leucadendron spissifolium", "Pringlea antiscorbutica", "Polyscias ornifolia", "Loeseneriella africana", "Pavetta abyssinica", 
+                             "Morella serrata", "Athanasia trifurcata", "Passerina paleacea", "Paullinia pinnata", "Combretum aculeatum", "Opilia amentacea", 
+                             "Erica hispidula", "Griffonia simplicifolia", "Alafia barteri", "Dalbergia obovata", "Strophanthus sarmentosus", "Urera hypselodendron")
+
+
+
+matched_data <- matched_data %>%
+  mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateShrubs & PlantGrowthForm == "", 
+                                  "shrub", PlantGrowthForm))
+
+
+
+
+species_to_updateVines <- ("Cissus verticillata")
 
 species_to_updateGrasses <- c()
 
