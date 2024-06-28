@@ -119,6 +119,12 @@ matched_data <- matched_data %>%
                                 "evergreen", LeafPhenology))
 
 
+matched_data <- matched_data %>%
+  mutate(LeafPhenology = ifelse(AccSpeciesName == "Strophanthus sarmentosus" & LeafPhenology == "evergreen", 
+                                "deciduous", LeafPhenology))
+
+
+
 LeafPhenology <- matched_data %>%
   group_by(LeafPhenology) %>%
   summarise(count = n()) %>%
