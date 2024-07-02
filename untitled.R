@@ -83,7 +83,17 @@ species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Termina
                         "Triplochiton scleroxylon", "Rubus steudneri", "Nesogordonia papaverifera", "Ocimum obovatum", "Sterculia rhinopetala", 
                         "Dalbergia baronii", "Pancovia harmsiana", "Sterculia oblonga", "Pericopsis laxiflora", "Pancovia laurentii", "Terminalia kilimandscharica",
                         "Pterygota macrocarpa", "Vitex welwitschii", "Loeseneriella africana", "Strychnos spinosa", "Gilletiodendron mildbraedii", "Paullinia pinnata", 
-                        "Combretum aculeatum", "Parkia bicolor", "Dalbergia obovata")
+                        "Combretum aculeatum", "Parkia bicolor", "Dalbergia obovata", "Millettia drastica", "Pericopsis angolensis", "Philenoptera violacea", 
+                        "Securidaca longipedunculata", "Vitex chrysocarpa", "Clematis simensis", "Erythrina senegalensis", "Flemingia macrophylla", "Philenoptera nelsii", 
+                        "Stephania abyssinica", "Alantsilodendron pilosum","Boswellia dalzielii", "Combretum nioroense", "Commiphora glandulosa", "Haematostaphis barteri", 
+                        "Adenia lobata", "Cadaba glandulosa", "Chasmanthera dependens", "Combretum bipindense", "Combretum tomentosum", "Flabellaria paniculata", 
+                        "Grewia arborea", "Grewia lasiodiscus", "Isoberlinia tomentosa", "Microberlinia bisulcata", "Philenoptera laxiflora", "Ritchiea capparoides", 
+                        "Senna singueana", "Solanum terminale", "Sterculia dawei", "Stictocardia beraviensis", "Tinospora caffra", 
+                        "Vitex doniana", "Dalbergia melanixilum", "Entada wahlbergii", "Jasminum grandiflorum", "Julbernardia pellegriniana", "Philenoptera laxiflora",
+                        "Millettia griffoniana", "Millettia laurentii", "Millettia usaramensis", "Newtonia paucijuga", "Pterocarpus antunesii", "Senna italica", 
+                        "Senna petersiana", "Senna podocarpa", "Senna spectabilis", "Sindoropsis letestui", "Sterculia setigera", "Vitex ferruginea", "Vitex fischeri", 
+                        "Vitex keniensis", "Halogeton alopecuroides", "Stephania cyanantha", "Mezoneuron benthamianum") 
+                        
                         
                         
 
@@ -167,7 +177,22 @@ species_to_update4 <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mamme
                         "Chrysophyllum lacourtianum", "Nuxia capitata", "Polyscias ornifolia", "Prioria oxyphylla", "Schotia brachypetala", "Pavetta abyssinica", 
                         "Morella serrata", "Monanthotaxis caffra", "Pterocarpus soyauxii", "Inhambanella henriquezii", "Paraserianthes lophantha", "Athanasia trifurcata", 
                         "Vepris trichocarpa", "Cornus volkensii", "Passerina paleacea", "Labramia louvelii", "Opilia amentacea", "Erica hispidula",
-                        "Griffonia simplicifolia", "Cissus verticillata", "Paramacrolobium coeruleum", "Urera hypselodendron")
+                        "Griffonia simplicifolia", "Cissus verticillata", "Paramacrolobium coeruleum", "Urera hypselodendron", "Jasminum abyssinicum", 
+                        "Julbernardia paniculata", "Brachystegia floribunda", "Cadaba farinosa", "Chassalia cristata", "Elachyptera parvifolia", "Massularia acuminata", 
+                        "Neuropeltis acuminata", "Ptychopetalum petiolatum", "Sericostachys scandens", "Tiliacora funifera", "Maerua crassifolia", 
+                        "Tetraberlinia bifoliolata", "Tetracera alnifolia", "Vepris lanceolata", "Vepris nobilis", "Adenia metamorpha", "Artabotrys modestus", 
+                        "Cissus petiolata", "Clerodendrum capitatum", "Clerodendrum fuscum", "Clerodendrum splendens", "Coffea liberica", "Colpoon compressum", 
+                        "Cryptolepis sanguinolenta", "Didelotia africana", "Elaeodendron croceum", "Elytropappus rhinocerotis", "Englerophytum oblanceolatum", 
+                        "Gardenia sokotensis", "Grewia laevigata", "Gymnosporia mossambicensis", "Leucadendron corymbosum", "Lippia multiflora", "Manilkara sulcata", 
+                        "Medusandra richardsiana", "Microglossa densiflora", "Mimetes fimbriifolius", "Mitragyna rubrostipulata", "Monanthotaxis fornicata", "Mussaenda erythrophylla", 
+                        "Nauclea latifolia", "Nesogordonia holtzii", "Octoknema borealis", "Omphalocarpum elatum", "Oncoba routledgei", "Ophiobotrys zenkeri", "Oxyanthus formosus", 
+                        "Oxyanthus zanguebaricus", "Polysphaeria parvifolia", "Premna maxima", "Premna oligotricha", "Protea caffra", "Psilotrichum africanum", "Psychotria alsophila", 
+                        "Psychotria crassipetala", "Pterocarpus santalinoides", "Pyrostria phyllanthoidea", "Rothmannia engleriana", "Rothmannia manganjae", "Rourea coccinea", 
+                        "Sageretia thea", "Scottellia kamerunensis", "Smilax aspera", "Strephonema pseudocola", "Strychnos panganensis", "Triclisia patens", 
+                        "Uvariopsis congolana", "Vernonia zanzibarensis", "Adenia kigogoensis", "Adenia litoralis", "Anthyllis henoniana", "Commiphora saxicola", 
+                        "Craterispermum laurinum", "Diospyros elliotii", "Entada gigas", "Jasminum fluminense", "Keetia cornelia", "Newbouldia laevis", "Ononis serrata", 
+                        "Otholobium fruticans", "Oxystigma oxyphyllum", "Thespesia garckeana", "Vepris uguenensis", "Vitex rivularis", "Zanthoxylum zanthoxyloides", 
+                        "Lycium shawii", "Adenia cissampeloides", "Cissampelos owariensis", "Pausinystalia pynaertii", "Adenia mcdadiana")
                         
 
 
@@ -193,7 +218,23 @@ species_to_updateTrees <- c("Vitellaria paradoxa", "Pouteria alnifolia", "Scorod
                             "Chrysophyllum lacourtianum", "Nuxia capitata", "Prioria oxyphylla", "Schotia brachypetala", "Strychnos spinosa", "Pentaclethra macrophylla", 
                             "Monanthotaxis caffra", "Pterocarpus soyauxii", "Elaeodendron transvaalense", "Tabernaemontana crassa", "Inhambanella henriquezii", 
                             "Paraserianthes lophantha", "Vepris trichocarpa", "Cornus volkensii", "Gilletiodendron mildbraedii", "Pouteria adolfi-friedericii",
-                            "Labramia louvelii", "Saba comorensis", "Napoleonaea imperialis", "Parkia bicolor", "Landolphia owariensis", "Paramacrolobium coeruleum")
+                            "Labramia louvelii", "Saba comorensis", "Napoleonaea imperialis", "Parkia bicolor", "Landolphia owariensis", "Paramacrolobium coeruleum", 
+                            "Julbernardia paniculata", "Millettia drastica", "Pericopsis angolensis", "Philenoptera violacea", "Securidaca longipedunculata",
+                            "Vitex chrysocarpa", "Brachystegia floribunda", "Erythrina senegalensis", "Philenoptera nelsii", "Ptychopetalum petiolatum", 
+                            "Tiliacora funifera", "Treculia obovoidea", "Alantsilodendron pilosum", "Boswellia dalzielii", "Commiphora glandulosa", 
+                            "Faurea saligna", "Gardenia ternifolia", "Haematostaphis barteri", "Maerua crassifolia", "Pouteria altissima", "Tetraberlinia bifoliolata", 
+                            "Vepris lanceolata", "Chasmanthera dependens", "Coffea liberica", "Colpoon compressum", "Didelotia africana", "Elaeodendron croceum", 
+                            "Englerophytum oblanceolatum", "Grewia arborea", "Gymnosporia mossambicensis", "Isoberlinia tomentosa", "Lettowianthus stellatus", "Ludia mauritiana", 
+                            "Maerua edulis", "Maerua triphylla", "Manilkara fouilloyana", "Manilkara sulcata", "Medusandra richardsiana", "Microberlinia bisulcata", 
+                            "Monanthotaxis fornicata", "Monanthotaxis parvifolia", "Monodora myristica", "Nauclea latifolia", "Nesogordonia holtzii", "Ocotea gabonensis", 
+                            "Octoknema borealis", "Omphalocarpum elatum", "Oncoba routledgei", "Ophiobotrys zenkeri", "Philenoptera laxiflora", "Pouteria pierrei", "Premna maxima", 
+                            "Pterocarpus santalinoides", "Rothmannia engleriana", "Rothmannia manganjae", "Saba senegalensis", "Scottellia kamerunensis", "Senna singueana", 
+                            "Sterculia dawei", "Strephonema pseudocola", "Syzygium parvifolium", "Syzygium sclerophyllum", "Tetrapleura tetraptera", "Xylopia arenaria", 
+                            "Adenia kigogoensis", "Adenia litoralis", "Anthyllis henoniana", "Dalbergia melanixilum", "Diospyros elliotii", "Julbernardia pellegriniana", "Keetia cornelia",
+                            "Milicia regia", "Millettia griffoniana", "Millettia laurentii", "Millettia usaramensis", "Newbouldia laevis", "Newtonia paucijuga", "Oxystigma oxyphyllum", 
+                            "Senna spectabilis", "Sindoropsis letestui", "Sterculia setigera", "Thespesia garckeana", "Vitex fischeri", "Vitex keniensis", 
+                            "Vitex rivularis", "Xanthocercis zambesiaca", "Zanthoxylum zanthoxyloides", "Pausinystalia pynaertii", "Lonchocarpus laxiflorus" 
+                            )
                             
 
 
@@ -213,7 +254,25 @@ species_to_updateShrubs <- c("Lycium shawii", "Haloxylon scoparium", "Helianthem
                              "Leucadendron salicifolium", "Polygala myrtifolia", "Syncarpha argyropsis", "Synsepalum subcordatum", "Solanum linnaeanum", 
                              "Leucadendron spissifolium", "Pringlea antiscorbutica", "Polyscias ornifolia", "Loeseneriella africana", "Pavetta abyssinica", 
                              "Morella serrata", "Athanasia trifurcata", "Passerina paleacea", "Paullinia pinnata", "Combretum aculeatum", "Opilia amentacea", 
-                             "Erica hispidula", "Griffonia simplicifolia", "Alafia barteri", "Dalbergia obovata", "Strophanthus sarmentosus", "Urera hypselodendron")
+                             "Erica hispidula", "Griffonia simplicifolia", "Alafia barteri", "Dalbergia obovata", "Strophanthus sarmentosus", "Urera hypselodendron", 
+                             "Jasminum abyssinicum", "Vitex congolensis", "Cadaba farinosa", "Chassalia cristata", "Clematis simensis", "Elachyptera parvifolia", 
+                             "Flemingia macrophylla", "Massularia acuminata", "Neuropeltis acuminata", "Passiflora edulis", "Protea madiensis", "Sericostachys scandens",
+                             "Stephania abyssinica", "Combretum nioroense", "Tetracera alnifolia", "Vepris nobilis", "Adenia lobata", "Adenia metamorpha", "Artabotrys modestus",
+                             "Cadaba glandulosa", "Clerodendrum capitatum", "Clerodendrum fuscum", "Clerodendrum splendens", "Combretum bipindense", "Combretum tomentosum", 
+                             "Cryptolepis sanguinolenta", "Elytropappus rhinocerotis", "Flabellaria paniculata", "Gardenia sokotensis", "Grewia laevigata", "Grewia lasiodiscus",
+                             "Grewia stuhlmannii", "Henophyton deserti", "Lagenaria abyssinica", "Leucadendron corymbosum", "Lippia multiflora", "Lobularia libyca", 
+                             "Lycium schweinfurthii", "Maerua edulis", "Maerua triphylla", "Memecylon fragrans", "Memecylon lateriflorum", "Microglossa densiflora", 
+                             "Mimetes fimbriifolius", "Mitragyna rubrostipulata", "Mussaenda erythrophylla", "Ochna thomasiana", "Olax subscorpioides", "Oxyanthus formosus", 
+                             "Oxyanthus zanguebaricus", "Pleiocarpa bicarpellata", "Polysphaeria parvifolia", "Premna chrysoclada", "Premna oligotricha", "Protea caffra", 
+                             "Psilotrichum africanum", "Psychotria alsophila", "Psychotria crassipetala", "Psychotria pseudoplatyphylla", "Psydrax faulknerae", "Psydrax polhillii", 
+                             "Pyrostria phyllanthoidea", "Rapanea rhododendroides", "Ritchiea capparoides", "Rourea coccinea", "Rutidea olenotricha", "Rutidea orientalis", 
+                             "Sageretia thea", "Scaphopetalum blackii", "Secamone afzelii", "Solanum terminale", "Stictocardia beraviensis", "Strombosia zenkeri", 
+                             "Strychnos panganensis", "Tinospora caffra", "Triclisia patens", "Uvaria schweinfurthii", "Uvariopsis congolana", "Vernonia zanzibarensis", "Vitex doniana", 
+                             "Commiphora saxicola", "Craterispermum laurinum", "Entada gigas", "Entada wahlbergii", "Haloxylon salicornicum", "Jasminum fluminense", 
+                             "Jasminum grandiflorum", "Leptadenia arborea", "Philenoptera laxiflora", "Ononis serrata", "Otholobium fruticans", "Pterocarpus antunesii", 
+                             "Senna italica", "Senna petersiana", "Senna podocarpa", "Strophanthus hispidus", "Vepris uguenensis", "Vitex ferruginea", "Halogeton alopecuroides", 
+                             "Begonia meyeri-johannis", "Scaphopetalum thonneri", "Adenia cissampeloides", "Baissea axillaris", "Hugonia castaneifolia", 
+                             "Mezoneuron benthamianum", "Microglossa pyrifolia", "Adenia mcdadiana", "Alafia microstylis", "Silene succulenta")
 
 
 
@@ -224,13 +283,35 @@ matched_data <- matched_data %>%
 
 
 
-species_to_updateVines <- ("Cissus verticillata")
+
+
 
 species_to_updateGrasses <- c()
 
-species_to_updateClimbers <- c()
+
+matched_data <- matched_data %>%
+  mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateGrasses & PlantGrowthForm == "", 
+                                "graminoid", PlantGrowthForm))
 
 
+
+species_to_updateVines <- c("Cissus verticillata", "Stephania cyanantha")
+
+
+matched_data <- matched_data %>%
+  mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateVines & PlantGrowthForm == "", 
+                                "vine", PlantGrowthForm))
+
+
+
+species_to_updateClimbers <- c("Urera trinervis", "Cissampelos owariensis", "Cissus petiolata", 
+                               "Dioscorea praehensilis", "Smilax aspera")
+                                
+
+
+matched_data <- matched_data %>%
+  mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateClimbers & PlantGrowthForm == "", 
+                                "climber", PlantGrowthForm))
 
 
 

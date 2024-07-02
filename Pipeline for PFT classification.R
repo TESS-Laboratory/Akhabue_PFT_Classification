@@ -80,13 +80,15 @@ species_count_TRY <- Categorical_table %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
+
+# For plant growth form
 PlantGrowthForm <- matched_data %>%
   group_by(PlantGrowthForm) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
 
-
+# For Leaf type
 matched_data$LeafType[which(matched_data$LeafType == "")] <- "broadleaved"
 
 LeafType <- matched_data %>%
@@ -96,7 +98,7 @@ LeafType <- matched_data %>%
 
 
 
-
+# For leaf phenology
 species_to_update1 <- c("Baikiaea plurijuga", "Brachystegia longifolia", "Brachystegia spiciformis", 
                         "Bridelia ferruginea", "Cassia sieberiana", "Combretum glutinosum", "Combretum micranthum", 
                         "Combretum nigricans", "Crossopteryx febrifuga", "Detarium microcarpum", "Dioscorea bulbifera", 
@@ -119,6 +121,20 @@ matched_data <- matched_data %>%
                                 "evergreen", LeafPhenology))
 
 
+
+matched_data <- matched_data %>%
+  mutate(LeafPhenology = ifelse(AccSpeciesName == "Pouteria pierrei" & LeafPhenology == "evergreen", 
+                                "deciduous", LeafPhenology))
+
+
+
+matched_data <- matched_data %>%
+  mutate(LeafPhenology = ifelse(AccSpeciesName == "Strophanthus hispidus" & LeafPhenology == "evergreen", 
+                                "deciduous", LeafPhenology))
+
+
+
+
 matched_data <- matched_data %>%
   mutate(LeafPhenology = ifelse(AccSpeciesName == "Strophanthus sarmentosus" & LeafPhenology == "evergreen", 
                                 "deciduous", LeafPhenology))
@@ -132,7 +148,7 @@ LeafPhenology <- matched_data %>%
 
 
 
-
+# For Photosynthetic pathway C3 and C4
 matched_data <- matched_data %>%
   mutate(PhotosyntheticPathway = ifelse(AccSpeciesName =="Chenopodium album" & PhotosyntheticPathway == "C3/C4",
                                         "C3", PhotosyntheticPathway))
