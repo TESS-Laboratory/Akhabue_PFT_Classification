@@ -17,7 +17,7 @@
 # C4 grasses, 
 }
 
-# Assign each specie a PFT class based on the information from the lookup table
+# ✓ Assign each specie a PFT class based on the information from the lookup table
 # sort the assigned species according to the species from your work data - as these are the species you will be working with
 # merge the new df - the pft classification data - to match with your working data 
 
@@ -29,18 +29,23 @@
 
 
 
-#Code----------------------------------------------------------------------------
+#Code--------------------------------------------
 
 # Load packages ----
 library(tidyverse)
-library(dplyr)
 
-# Read the trait data file and the look up table ----
+
+# Read and clean data file  ----
+
 Trait_species <- read.csv("trait_africa.csv")
 
 
-# Other data from csv
+# Other data from csv - This data is the list of species in the trait data not found in the categorical table. I had to export and carry out the classification exercise outside R
 PFT_CLASS <- read.csv("PFT_CLASS.csv")
+
+
+# load global data - The global trait data for QC purpose
+Global_traitdata <- read.csv("trait_data.csv")
 
 
 # Look up table
@@ -54,6 +59,11 @@ Categorical_table<- Categorical_table %>% dplyr::select(one_of(vars))
 
 
 
+# Remove rows where AccSpeciesID is 25135 or 62840 - these are duplicates. There are other duplicates in the categorical table, but only these 2 species occur in the trait data, so I have focused on them only
+Categorical_table <- Categorical_table %>%
+  filter(!(AccSpeciesID %in% c(25135, 62840)))
+
+
 
 # Sort the unique species from my working data ----
 # Count the occurrences of each species from my observation
@@ -62,8 +72,19 @@ species_count_traitdata <- Trait_species %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
-# Print the total number of unique species
-print(nrow(species_count_traitdata))
+
+# for global data
+species_count_traitdataglobal <- Global_traitdata %>%
+  group_by(AccSpeciesName) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+
+# for categorical table
+species_count_TRY <- Categorical_table %>%
+  group_by(AccSpeciesName) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
 
 
 # Merge the datasets based on AccSpeciesName
@@ -75,14 +96,12 @@ merged_data <- merge(species_count_traitdata, Categorical_table, by = "AccSpecie
 matched_data <- merge(species_count_traitdata, Categorical_table, by = "AccSpeciesName")
 
 
+
+
 # Sort unique values for the other variables in the categorical table eg leaf type, plant growth form, leaf phenology, photosynthetic pathway
 # this is to know the different variables and their individual count
 # this is also important for QC to help indicate for duplicates and solve that problem
-
-species_count_TRY <- Categorical_table %>%
-  group_by(AccSpeciesName) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
+# After the sorting was done, it was easy to identify the species with missing information and what information was needed
 
 
 # For plant growth form ----
@@ -229,13 +248,13 @@ species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Termina
                         "Terminalia brachystemma", "Terminalia mollis", "Terminalia prunioides", 
                         "Vepris zambesiaca", "Maerua angolensis", "Maerua prittwitzii", "Maesopsis eminii",
                         "Monodora junodii", "Nectaropetalum kaessneri", "Newtonia buchananii",
-                        "Khaya grandifoliola", "Ozoroa insignis", "Flueggea virosa", "Aidia genipiflora",
+                        "Khaya grandifoliola", "Ozoroa insignis", "Aidia genipiflora",
                         "Khaya anthotheca", "Ficus sycomorus", "Combretum mossambicense", "Chaetachme aristata", 
                         "Cola griseiflora", "Albizia ferruginea", "Ficus lutea", "Brachylaena ramiflora", "Hagenia abyssinica",
                         "Bauhinia thonningii", "Ricinodendron heudelotii", "Lannea welwitschii", "Dalbergia armata", 
                         "Brachystegia boehmii", "Lannea schweinfurthii", "Cordia sinensis", "Combretum fruticosum",
                         "Bridelia scleroneura", "Isoberlinia angolensis", "Albizia harveyi", "Cleistochlamys kirkii",
-                        "Commiphora neglecta", "Diospyros alboflavescens", "Entandrophragma candollei", "Grewia mollis", 
+                        "Commiphora neglecta", "Diospyros alboflavescens", "Grewia mollis", 
                         "Klaineanthus gaboniae", "Berchemia discolor", "Cecropia concolor", "Dialium excelsum", "Guibourtia demeusei",
                         "Mitragyna inermis", "Ozoroa obovata", "Pseudocedrela kotschyi", "Psorospermum febrifugum", 
                         "Baillonella toxisperma", "Berlinia grandiflora", "Commiphora mollis", "Croton sylvaticus",
@@ -434,14 +453,14 @@ PhotosyntheticPathway <- matched_data %>%
 
 
 
-# Combine both dataset 
+# Combine both dataset - combining the matched dataset with complete information and the other data that was sorted outside of R to get the complete species data collected for this study
 matched_data <- bind_rows(matched_data, PFT_CLASS)
 
 
 
 
 # group species into different PFT classes
-# At this stage I will combine theBET-Tr (tropical broadleaf evergreen trees), and
+# At this stage I will combine the BET-Tr (tropical broadleaf evergreen trees), and
 # BET-Te (temperate broadleaf evergreen trees) together. Because I will need the GeoLoc to group into temp and tropical
 # Considering that all my data are from Africa this should be easy to sort out
 
@@ -469,7 +488,7 @@ PFT_Tree_Evergreen <- PFT_Tree_Broadleaf %>%
   filter(LeafPhenology %in% c("evergreen"))                   # NO. 1+2 BET - Te+Tr
 
 
-PFT_Tree_Evergreen$PFT <- 'BET'
+PFT_Tree_Evergreen$PFT <- 'BET-Tr'
 
 
 
@@ -496,7 +515,7 @@ PFT_Needleleaf_Evergreen$PFT <- 'NET'
 
 
 PFT_Needleleaf_Deciduous <- PFT_Needleleaf %>%
-  filter(LeafPhenology %in% c("deciduous"))                   # NO. 5 NDT
+  filter(LeafPhenology %in% c("deciduous"))                   # NO. 5 NDT So far, no indication that any species in my dataset falls under this class
 
 
 PFT_Needleleaf_Deciduous$PFT <- 'NDT'
@@ -556,8 +575,39 @@ combined_df_PFT <- bind_rows(PFT_Tree_Evergreen, PFT_Tree_Deciduous, PFT_Needlel
                              PFT_Grass_C3, PFT_Grass_C4)
 
 
-# View the combined data frame
-print(combined_df_PFT)
+
+
+# Perform a left join to add PFT information to Trait_species
+Trait_species_with_PFT <- Trait_species %>%
+  left_join(combined_df_PFT %>%
+              select(AccSpeciesName, PFT), 
+            by = "AccSpeciesName")
+
+
+
+
+
+# Visualization of data to ascertain the value of PFT classes in my data and what steps can be taken further ----
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#-----
 
 
 
