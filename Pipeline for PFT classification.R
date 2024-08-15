@@ -35,6 +35,8 @@
 library(tidyverse)
 library(viridis)  # For color scales
 library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
 
 
 # Read and clean data file  ----
@@ -635,7 +637,7 @@ Trait_species_with_PFT_sf <- Trait_species_with_PFT %>%
     theme_void() +
     labs(x = "Longitude", y = "Latitude", color = "PFT") +
     guides(color = guide_legend(title = "PFT")) +
-    ggtitle("Geographic distribution of PFTs in Africa"))
+    ggtitle("Geographic distribution of PFTs in Africa")) 
 
 
 
@@ -673,7 +675,8 @@ ggplot(Trait_species_with_PFT, aes(x = StdValue, fill = PFT)) +
   geom_density(alpha = 0.6) +
   facet_wrap(~ TraitName, scales = "free") +
   labs(title = "Density Plot of Traits by PFT", x = "Standard Value") +
-  theme_minimal() + scale_x_log10()
+  theme_minimal() + scale_x_log10() +
+  scale_fill_viridis_d()
 
 
 
@@ -690,6 +693,7 @@ ggplot(Trait_species_with_PFT, aes(x = PFT, y = StdValue, color = PFT)) +
   labs(title = "Standard Value vs. PFT by Trait", x = "PFT", y = "Standard Value") + 
   scale_y_log10() +
   theme(legend.position = "none")
+  
 
 
 # Box plot of Standard Value by PFT, faceted by TraitName
@@ -699,7 +703,8 @@ ggplot(Trait_species_with_PFT, aes(x = PFT, y = StdValue, fill = PFT)) +
   theme_minimal() +
   labs(title = "Distribution of Standard Value by PFT and Trait", x = "PFT", y = "Standard Value") + 
   scale_y_log10() +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  scale_fill_viridis_d()
 
 
 
@@ -713,7 +718,8 @@ ggplot(Trait_species_with_PFT, aes(x = StdValue, fill = PFT)) +
   geom_histogram(bins = 30, position = "dodge", alpha = 0.7) +
   facet_wrap(~ TraitName, scales = "free") +
   theme_minimal() +
-  labs(title = "Trait Distributions by PFT", x = "Standard Value", y = "Count")
+  labs(title = "Trait Distributions by PFT", x = "Standard Value", y = "Count") +
+  scale_fill_viridis_d()
 
 
 
@@ -731,7 +737,8 @@ summary_stats <- Trait_species_with_PFT %>%
 ggplot(summary_stats, aes(x = PFT, y = mean, fill = TraitName)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_minimal() +
-  labs(title = "Mean Trait Values by PFT", x = "PFT", y = "Mean Value")
+  labs(title = "Mean Trait Values by PFT", x = "PFT", y = "Mean Value") +
+  scale_fill_viridis_d()
 
 
 # 7. Species diversity curve by PFT ----
@@ -786,10 +793,27 @@ ggplot(trait_distribution, aes(x = PFT, y = count, fill = TraitName)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "none") +
-  facet_wrap(~ TraitName, scales = "free_y", nrow = 2, ncol = 4)
+  facet_wrap(~ TraitName, scales = "free_y", nrow = 2, ncol = 4) +
+  scale_fill_viridis_d()
 
 
 
+# 9. Calculate the mean or median of StdValue for each PFT and TraitName----
+pft_lines <- Trait_species_with_PFT %>%
+  group_by(PFT, TraitName) %>%
+  summarise(mean_value = mean(StdValue, na.rm = TRUE))
+
+# Plot with density and PFT lines
+ggplot(Trait_species_with_PFT, aes(x = StdValue)) +
+  geom_density(fill = "red", alpha = 0.7) +
+  facet_wrap(~TraitName, scales = "free", ncol = 4, labeller = label_wrap_gen(width = 30)) +
+  geom_vline(data = pft_lines, aes(xintercept = mean_value, color = PFT), linetype = "solid") +
+  labs(title = "Density Plot for Traits in Africa with PFT Lines",
+       x = "Standardized Value",
+       y = "Density") +
+  theme_minimal() +
+  scale_x_log10() +
+  theme(legend.position = "bottom", panel.grid = element_blank())
 
 
 
