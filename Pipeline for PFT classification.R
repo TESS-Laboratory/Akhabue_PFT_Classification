@@ -33,6 +33,8 @@
 
 # Load packages ----
 library(tidyverse)
+library(viridis)  # For color scales
+library(sf)
 
 
 # Read and clean data file  ----
@@ -585,16 +587,206 @@ Trait_species_with_PFT <- Trait_species %>%
 
 
 
+# omit NA data. these are species that could not be classified due to limited information and available resources
+
+Trait_species_with_PFT <- Trait_species_with_PFT[!is.na(Trait_species_with_PFT$PFT), ]
+
+# remove columns not useful 
+Trait_species_with_PFT <- subset(Trait_species_with_PFT, select = -c(geometry, geo))
+
+
+# export data 
+write.csv(Trait_species_with_PFT, "PFT_trait_data.csv", row.names = FALSE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # Visualization of data to ascertain the value of PFT classes in my data and what steps can be taken further ----
 
+# 1. PFT Distribution Map----
+#This map will show the geographic distribution of different Plant Functional Types (PFTs).
+
+# Get world map data and filter for African countries
+world <- ne_countries(scale = "medium", returnclass = "sf")
+africa <- sf::st_make_valid(world[world$continent == "Africa", ])
+Trait_species_with_PFT_sf <- Trait_species_with_PFT %>%
+  sf::st_as_sf(coords = c("Longitude", "Latitude"), crs = 4326, remove = FALSE) %>%
+  sf::st_filter(africa)
+
+
+(ggplot() +
+    geom_sf(data = africa, fill = NA, color = "black") +
+    geom_sf(data = Trait_species_with_PFT_sf, aes(color = PFT)) +
+    coord_sf() +
+    theme_void() +
+    labs(x = "Longitude", y = "Latitude", color = "PFT") +
+    guides(color = guide_legend(title = "PFT")) +
+    ggtitle("Geographic distribution of PFTs in Africa"))
+
+
+
+# 2. PFT Density Plot----
+# This plot will visualize the density of PFTs in different regions. You could use a hexbin plot or kernel density estimation.
+
+pft_counts <- Trait_species_with_PFT %>%
+  count(PFT) %>%
+  rename(count = n)
+
+
+# Prepare custom legend labels
+custom_labels <- pft_counts %>%
+  mutate(label = paste(PFT, " (", count, " obs)", sep = ""))
+
+
+
+(heat_map_density <- ggplot() +
+    geom_hex(data = Trait_species_with_PFT, aes(x = Longitude, y = Latitude, fill = PFT), bins = 30) +
+    geom_sf(data = africa, fill = NA, color = "black") +  # Add country borders
+    coord_sf() +  # Use coord_sf instead of coord_quickmap
+    theme_void() +
+    labs(x = "Longitude", y = "Latitude", fill = "PFT") +
+    scale_fill_viridis_d()) + 
+  scale_fill_viridis_d(labels = custom_labels$label) +  # Add custom labels to the legend
+  ggtitle("Geographic distribution of PFTs in Africa")
+
+
+
+
+# 3. Density Plot of Traits by PFT----
+# allowing for a comparison of the distribution of trait values between different PFTs.
+
+ggplot(Trait_species_with_PFT, aes(x = StdValue, fill = PFT)) +
+  geom_density(alpha = 0.6) +
+  facet_wrap(~ TraitName, scales = "free") +
+  labs(title = "Density Plot of Traits by PFT", x = "Standard Value") +
+  theme_minimal() + scale_x_log10()
+
+
+
+
+# 4. PFT vs Traits----
+# create faceted scatter plots or box plots to visualize the relationship between PFT and various traits.
+# Help understand the variability and central tendency of each trait within each PFT
+
+# Scatter plot for Standard Value by PFT, faceted by TraitName
+ggplot(Trait_species_with_PFT, aes(x = PFT, y = StdValue, color = PFT)) +
+  geom_point(alpha = 0.7) +
+  facet_wrap(~ TraitName, scales = "free_y") +
+  theme_minimal() +
+  labs(title = "Standard Value vs. PFT by Trait", x = "PFT", y = "Standard Value") + 
+  scale_y_log10() +
+  theme(legend.position = "none")
+
+
+# Box plot of Standard Value by PFT, faceted by TraitName
+ggplot(Trait_species_with_PFT, aes(x = PFT, y = StdValue, fill = PFT)) +
+  geom_boxplot() +
+  facet_wrap(~ TraitName, scales = "free") +
+  theme_minimal() +
+  labs(title = "Distribution of Standard Value by PFT and Trait", x = "PFT", y = "Standard Value") + 
+  scale_y_log10() +
+  theme(legend.position = "none")
 
 
 
 
 
+# 5. Trait Distributions by PFT----
+# Histogram or density plots showing the distribution of each trait for different PFTs.
 
+# Histogram
+ggplot(Trait_species_with_PFT, aes(x = StdValue, fill = PFT)) +
+  geom_histogram(bins = 30, position = "dodge", alpha = 0.7) +
+  facet_wrap(~ TraitName, scales = "free") +
+  theme_minimal() +
+  labs(title = "Trait Distributions by PFT", x = "Standard Value", y = "Count")
+
+
+
+
+# 6. Summary Statistics by PFT ----
+#You could also visualize summary statistics like means and standard deviations of traits by PFT using bar plots.
+
+# Summary statistics
+summary_stats <- Trait_species_with_PFT %>%
+  group_by(PFT, TraitName) %>%
+  summarise(mean = mean(StdValue, na.rm = TRUE),
+            sd = sd(StdValue, na.rm = TRUE))
+
+# Plot
+ggplot(summary_stats, aes(x = PFT, y = mean, fill = TraitName)) +
+  geom_bar(stat = "identity", position = "dodge") +
+  theme_minimal() +
+  labs(title = "Mean Trait Values by PFT", x = "PFT", y = "Mean Value")
+
+
+# 7. Species diversity curve by PFT ----
+# Prepare the data: Calculate the number of observations per PFT
+pft_count <- Trait_species_with_PFT %>%
+  group_by(PFT) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count))
+
+# Plotting: Rank PFTs on the x-axis and plot against their counts
+ggplot(pft_count, aes(x = reorder(PFT, -count), y = count, group = 1)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, span = 0.5) +  # Adjust 'span' to control smoothness
+  labs(title = "Species accumulation curve",
+       x = "PFT",
+       y = "Observation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+# Calculate quantiles for the rank (x-axis) positions
+quantiles <- quantile(1:nrow(pft_count), probs = c(0.25, 0.5, 0.75))
+
+# Plotting: Rank PFTs on the x-axis and plot against their counts
+ggplot(pft_count, aes(x = reorder(PFT, -count), y = count, group = 1)) +
+  geom_point() +
+  geom_smooth(method = "loess", se = FALSE, span = 0.5) +  # Smooth curve
+  geom_vline(xintercept = quantiles, linetype = "dashed", color = "blue") +  # Vertical quantile lines
+  labs(title = "Species accumulation curve",
+       x = "PFT",
+       y = "Observation") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+
+
+
+
+# 8 Facet grid Trait distribution by PFT ----
+# Summarize the data
+trait_distribution <- Trait_species_with_PFT %>%
+  group_by(PFT, TraitName) %>%
+  summarise(count = n())
+
+# Plot using facet grid
+ggplot(trait_distribution, aes(x = PFT, y = count, fill = TraitName)) +
+  geom_bar(stat = "identity") +
+  labs(title = "Trait Distribution by PFT",
+       x = "PFT",
+       y = "Count of Observations") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "none") +
+  facet_wrap(~ TraitName, scales = "free_y", nrow = 2, ncol = 4)
 
 
 
