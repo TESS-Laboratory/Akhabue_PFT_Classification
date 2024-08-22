@@ -29,7 +29,7 @@
 
 
 
-#Code--------------------------------------------
+# Code--------------------------------------------
 
 # Load packages ----
 library(tidyverse)
@@ -818,9 +818,10 @@ ggplot(Trait_species_with_PFT, aes(x = StdValue)) +
 
 
 
+# Alternative to saveplot to computer. ----
 
-
-
+# Save the plot with increased size and resolution
+# ggsave(map_plot, filename="plot_name.png", dpi=300, width=10, height=8)
 
 
 #-----
