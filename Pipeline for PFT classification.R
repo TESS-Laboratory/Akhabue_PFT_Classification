@@ -840,3 +840,31 @@ ggplot(Trait_species_with_PFT, aes(x = StdValue)) +
 
 
 
+
+
+
+
+# This part of analysis is to generate the mean, interquartile range, min and max value for each of the individual traits and their PFT
+# the PFTs BDT, BET_Tr, C3, C4, DSH, ESH, NET
+
+
+
+# Calculate the summary statistics
+summary_stats <- Trait_species_with_PFT %>%
+  group_by(PFT, TraitName) %>%
+  summarise(
+    mean = mean(StdValue, na.rm = TRUE),
+    median = median(StdValue, na.rm = TRUE),
+    IQR = IQR(StdValue, na.rm = TRUE),
+    min = min(StdValue, na.rm = TRUE),
+    max = max(StdValue, na.rm = TRUE)
+  )
+
+# View the results
+print(summary_stats)
+
+
+
+# export data 
+write.csv(summary_stats, "summary_stats.csv", row.names = FALSE)
+
