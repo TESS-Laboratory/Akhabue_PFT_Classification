@@ -793,7 +793,7 @@ ggplot(trait_distribution, aes(x = PFT, y = count, fill = TraitName)) +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1),
         legend.position = "none") +
-  facet_wrap(~ TraitName, scales = "free_y", nrow = 2, ncol = 4) +
+  facet_wrap(~ TraitName, scales = "free_y", nrow = 3, ncol = 3) +
   scale_fill_viridis_d()
 
 
@@ -805,7 +805,7 @@ pft_lines <- Trait_species_with_PFT %>%
 
 # Plot with density and PFT lines
 ggplot(Trait_species_with_PFT, aes(x = StdValue)) +
-  geom_density(fill = "red", alpha = 0.7) +
+  geom_density(fill = "red", alpha = 0.3) +
   facet_wrap(~TraitName, scales = "free", ncol = 4, labeller = label_wrap_gen(width = 30)) +
   geom_vline(data = pft_lines, aes(xintercept = mean_value, color = PFT), linetype = "solid") +
   labs(title = "Density Plot for Traits in Africa with PFT Lines",
