@@ -631,13 +631,17 @@ Trait_species_with_PFT_sf <- Trait_species_with_PFT %>%
 
 
 (ggplot() +
-    geom_sf(data = africa, fill = NA, color = "black") +
+    geom_sf(data = africa, fill = NA, color = "black", size = 1.2) +
     geom_sf(data = Trait_species_with_PFT_sf, aes(color = PFT)) +
     coord_sf() +
     theme_void() +
     labs(x = "Longitude", y = "Latitude", color = "PFT") +
     guides(color = guide_legend(title = "PFT")) +
-    ggtitle("Geographic distribution of PFTs in Africa")) 
+    ggtitle("Geographic distribution of Plant Functional Types (PFTs) in Africa")) +
+    theme(plot.title = element_text(face = "bold", size = 18),         # Increase title size
+      legend.title = element_text(face = "bold", size = 14),       # Increase legend title size
+      legend.text = element_text(face = "bold", size = 12))         # Increase legend label size
+     
 
 
 
