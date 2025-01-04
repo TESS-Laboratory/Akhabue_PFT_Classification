@@ -619,6 +619,14 @@ write.csv(Trait_species_with_PFT, "PFT_trait_data.csv", row.names = FALSE)
 
 # Visualization of data to ascertain the value of PFT classes in my data and what steps can be taken further ----
 
+# First filter using `%in%` to exclude "in situ" but keep NA values
+Trait_species_with_PFT <- Trait_species_with_PFT %>%
+  filter(is.na(Exposition) | Exposition != "in situ")
+ 
+#write.csv(Trait_species_with_PFT, "PFT_trait_data-23.csv", row.names = FALSE)
+
+
+
 # 1. PFT Distribution Map----
 #This map will show the geographic distribution of different Plant Functional Types (PFTs).
 
