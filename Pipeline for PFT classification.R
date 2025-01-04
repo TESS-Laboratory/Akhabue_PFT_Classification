@@ -601,7 +601,7 @@ Trait_species_with_PFT <- subset(Trait_species_with_PFT, select = -c(geometry, g
 write.csv(Trait_species_with_PFT, "PFT_trait_data.csv", row.names = FALSE)
 
 
-
+write.csv(combined_df_PFT, "Mapped_PFT_data.csv", row.names = FALSE)
 
 
 
