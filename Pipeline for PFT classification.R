@@ -580,6 +580,72 @@ combined_df_PFT <- bind_rows(PFT_Tree_Evergreen, PFT_Tree_Deciduous, PFT_Needlel
 
 
 
+# sort out the family name for each classified species
+family_count_traitdata <- combined_df_PFT %>%
+  group_by(Family) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) #note that 2 observations in the combined_df_PFT are without family names 
+                      #Eucalyptus PF1 (hybrid E. teriticornis x E. grandis) = 1 count and Ilex sp = 19 count
+                      #after saving this, I have manually included them approriately to their respective family
+                      #this is because other species in the same family are in the dataset and are already accounted for
+
+
+
+# Update the dataset to include full names for PFTs
+pft_species_count <- combined_df_PFT %>%
+  group_by(PFT) %>%
+  summarise(SpeciesCount = n_distinct(AccSpeciesName)) %>%
+  mutate(PFT_Full = case_when(
+    PFT == "BDT" ~ "Broadleaf Deciduous Trees",
+    PFT == "BET-Tr" ~ "Broadleaf Evergreen Trees (Tropical)",
+    PFT == "C3" ~ "C3 Grasses",
+    PFT == "C4" ~ "C4 Grasses",
+    PFT == "DSH" ~ "Deciduous Shrubs",
+    PFT == "ESH" ~ "Evergreen Shrubs",
+    PFT == "NET" ~ "Needleleaf Evergreen Trees",
+    TRUE ~ PFT  # Default case if there are unhandled PFTs
+  ))
+
+# Plot the bar chart using the full PFT names for the legend
+ggplot(pft_species_count, aes(x = PFT, y = SpeciesCount, fill = PFT_Full)) +
+  geom_bar(stat = "identity", width = 0.7) +
+  labs(x = "Plant Functional Types (PFTs)",
+       y = "Number of Unique Species",
+       fill = "PFT Categories") +  # Rename legend title
+  theme_minimal() +
+  theme(
+    legend.text = element_text(size = 14),  # Increase legend text size
+    legend.title = element_text(size = 15) # Increase legend title size
+  )
+
+
+
+
+
+# Calculate proportions and labels
+pft_species_count <- combined_df_PFT %>%
+  group_by(PFT) %>%
+  summarise(SpeciesCount = n_distinct(AccSpeciesName)) %>%
+  mutate(
+    Proportion = SpeciesCount / sum(SpeciesCount) * 100,  # Calculate percentage
+    Label = paste0(round(Proportion, 1), "%")  # Create percentage label
+  )
+
+ggplot(pft_species_count, aes(x = "", y = Proportion, fill = PFT)) +
+  geom_col(color = "black") +
+  geom_text(aes(label = Label), color = c(1, "black", "black", "black", "black", "black", "black"),
+            position = position_stack(vjust = 0.5),
+            show.legend = FALSE) +
+  guides(fill = guide_legend(title = "PFT")) +
+  scale_fill_viridis_d() +
+  coord_polar(theta = "y") + 
+  theme_void()
+
+
+
+
+
+
 
 # Perform a left join to add PFT information to Trait_species
 Trait_species_with_PFT <- Trait_species %>%
@@ -597,6 +663,8 @@ Trait_species_with_PFT <- Trait_species_with_PFT[!is.na(Trait_species_with_PFT$P
 Trait_species_with_PFT <- subset(Trait_species_with_PFT, select = -c(geometry, geo))
 
 
+
+
 # export data 
 write.csv(Trait_species_with_PFT, "PFT_trait_data.csv", row.names = FALSE)
 
@@ -604,15 +672,7 @@ write.csv(Trait_species_with_PFT, "PFT_trait_data.csv", row.names = FALSE)
 write.csv(combined_df_PFT, "Mapped_PFT_data.csv", row.names = FALSE)
 
 
-
-
-
-
-
-
-
-
-
+write.csv(pft_species_count, "pft_species_count.csv", row.names = FALSE)
 
 
 
