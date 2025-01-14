@@ -607,16 +607,17 @@ pft_species_count <- combined_df_PFT %>%
   ))
 
 # Plot the bar chart using the full PFT names for the legend
-ggplot(pft_species_count, aes(x = PFT, y = SpeciesCount, fill = PFT_Full)) +
+bar_chart <- ggplot(pft_species_count, aes(x = PFT, y = SpeciesCount, fill = PFT_Full)) +
   geom_bar(stat = "identity", width = 0.7) +
   labs(x = "Plant Functional Types (PFTs)",
        y = "Number of Unique Species",
        fill = "PFT Categories") +  # Rename legend title
+  scale_fill_viridis_d() +
   theme_minimal() +
   theme(
     legend.text = element_text(size = 14),  # Increase legend text size
     legend.title = element_text(size = 15) # Increase legend title size
-  )
+  ) 
 
 
 
@@ -631,7 +632,7 @@ pft_species_count <- combined_df_PFT %>%
     Label = paste0(round(Proportion, 1), "%")  # Create percentage label
   )
 
-ggplot(pft_species_count, aes(x = "", y = Proportion, fill = PFT)) +
+pie_chart <- ggplot(pft_species_count, aes(x = "", y = Proportion, fill = PFT)) +
   geom_col(color = "black") +
   geom_text(aes(label = Label), color = c(1, "black", "black", "black", "black", "black", "black"),
             position = position_stack(vjust = 0.5),
@@ -643,7 +644,11 @@ ggplot(pft_species_count, aes(x = "", y = Proportion, fill = PFT)) +
 
 
 
+# Combine the two plots side by side
+# combined_plot <- bar_chart + pie_chart + plot_layout(ncol = 1)
 
+# Display the combined plot
+# print(combined_plot)
 
 
 
@@ -938,5 +943,5 @@ print(summary_stats)
 
 
 # export data 
-write.csv(summary_stats, "summary_stats.csv", row.names = FALSE)
+#write.csv(summary_stats, "summary_stats.csv", row.names = FALSE)
 
