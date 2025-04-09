@@ -102,6 +102,27 @@ matched_data <- merge(species_count_traitdata, Categorical_table, by = "AccSpeci
 
 
 
+
+# before moving forward, sort out the 4 parameters before assignment ----
+
+classification_cols <- c("PlantGrowthForm", "LeafType", "LeafPhenology", "PhotosyntheticPathway")
+
+# This is BEFORE – treating empty strings as missing
+matched_data$param_count_before <- apply(matched_data[, classification_cols], 1, function(row) {
+  sum(row != "" & !is.na(row))  # non-empty and non-NA
+})
+
+
+summary_table_before <- as.data.frame(table(matched_data$param_count_before))
+names(summary_table_before) <- c("No_of_parameters", "No_of_species")
+print(summary_table_before)
+
+
+
+
+
+
+
 # Sort unique values for the other variables in the categorical table eg leaf type, plant growth form, leaf phenology, photosynthetic pathway
 # this is to know the different variables and their individual count
 # this is also important for QC to help indicate for duplicates and solve that problem
@@ -457,13 +478,74 @@ PhotosyntheticPathway <- matched_data %>%
 
 
 
-# Combine both dataset - combining the matched dataset with complete information and the other data that was sorted outside of R to get the complete species data collected for this study
+# Combine both dataset - combining the matched dataset with complete information and the other data that was sorted outside of R to get the complete species data collected for this study ----
 matched_data <- bind_rows(matched_data, PFT_CLASS)
 
 
 
 
-# group species into different PFT classes
+# before grouping, I will sort out the parameter assignment after ----
+# This is AFTER – counts what's now filled in (same as above, if you're done assigning)
+matched_data$param_count_after <- apply(matched_data[, classification_cols], 1, function(row) {
+  sum(row != "" & !is.na(row))
+})
+
+
+# Replace NA values in param_count_before with 0
+matched_data$param_count_before[is.na(matched_data$param_count_before)] <- 0
+
+
+summary_before <- matched_data %>%
+  count(param_count_before) %>%
+  rename(No_of_parameters = param_count_before, No_of_species = n) %>%
+  mutate(Status = "Before")
+
+summary_after <- matched_data %>%
+  count(param_count_after) %>%
+  rename(No_of_parameters = param_count_after, No_of_species = n) %>%
+  mutate(Status = "After")
+
+summary_combined <- bind_rows(summary_before, summary_after)
+
+
+
+
+
+# plot the before and after parameter assignment ----
+
+ggplot(summary_combined, aes(x = as.numeric(No_of_parameters), y = No_of_species, color = Status)) +
+  geom_point(size = 3) +
+  geom_smooth(se = FALSE, method = "loess", span = 0.6, size = 1.2) +
+  scale_x_continuous(breaks = 0:4) +
+  scale_y_continuous(breaks = seq(0, 1000, by = 200)) +
+  scale_color_manual(
+    name = "Parameter information availability",
+    values = c("Before" = "#00BFC4", "After" = "#F8766D"),
+    labels = c("Before" = "Original dataset", "After" = "After parameter assignment")
+  ) +
+  labs(
+    x = "Number of parameters present (out of 4)",
+    y = "Number of species"
+  ) +
+  theme_classic(base_size = 14) +
+  theme(
+    axis.title = element_text(size = 18),
+    axis.text = element_text(size = 18),
+    legend.title = element_text(size = 18),       # Bigger legend title
+    legend.text = element_text(size = 18),        # Bigger legend labels
+    axis.line = element_line(size = 0.8, color = "black"),  # X and Y axis lines
+    panel.grid.major = element_line(color = "grey90", size = 0.4), # Optional soft grid
+    panel.grid.minor = element_blank()
+  )
+
+
+
+ggsave("parameter_assignment_plot.png", width = 16, height = 10, dpi = 300, bg = "white")
+
+
+
+
+# group species into different PFT classes ----
 # At this stage I will combine the BET-Tr (tropical broadleaf evergreen trees), and
 # BET-Te (temperate broadleaf evergreen trees) together. Because I will need the GeoLoc to group into temp and tropical
 # Considering that all my data are from Africa this should be easy to sort out
