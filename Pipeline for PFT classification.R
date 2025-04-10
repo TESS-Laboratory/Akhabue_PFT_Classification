@@ -841,6 +841,61 @@ custom_labels <- pft_counts %>%
 
 
 
+
+
+# Get PFT counts for the legend
+pft_counts <- Trait_species_with_PFT %>%
+  count(PFT) %>%
+  rename(count = n)
+
+# Create label with counts for each facet
+Trait_species_with_PFT <- Trait_species_with_PFT %>%
+  mutate(PFT_label = case_when(
+    PFT == "BDT" ~ "Broadleaf Deciduous Trees",
+    PFT == "BET-Tr" ~ "Tropical Broadleaf Evergreen Trees",
+    PFT == "C3" ~ "C3 Grasses",
+    PFT == "C4" ~ "C4 Grasses",
+    PFT == "DSH" ~ "Deciduous Shrubs",
+    PFT == "ESH" ~ "Evergreen Shrubs",
+    PFT == "NET" ~ "Needleleaf Evergreen Trees",
+    TRUE ~ PFT
+  ))
+
+# Plot: facet by PFT_label
+pft_density <- ggplot() +
+  geom_hex(data = Trait_species_with_PFT, aes(x = Longitude, y = Latitude), bins = 25) +
+  geom_sf(data = africa, fill = NA, color = "black", linewidth = 0.3) +
+  coord_sf(xlim = c(-20, 55), ylim = c(-35, 37)) +
+  facet_wrap(~PFT_label, ncol = 3) +
+  scale_fill_viridis_c(option = "C", name = "No. of Observations", trans = "sqrt") +  # square-root scale evens extremes
+  labs(
+    x = "Longitude", y = "Latitude"
+  ) +
+  theme_minimal() +
+  theme(
+    strip.text = element_text(size = 18, face = "bold"),
+    axis.text = element_text(size = 7),
+    axis.title = element_text(size = 10),
+    legend.title = element_text(size = 18),
+    legend.text = element_text(size = 18)
+  )
+
+
+ggsave("PFT_density.png", plot = pft_density, width = 20, height = 16, dpi = 300, bg = "white")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # 3. Density Plot of Traits by PFT----
 # allowing for a comparison of the distribution of trait values between different PFTs.
 
