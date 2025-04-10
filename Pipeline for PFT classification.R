@@ -508,6 +508,10 @@ summary_after <- matched_data %>%
 summary_combined <- bind_rows(summary_before, summary_after)
 
 
+# export data 
+write.csv(summary_before, "summary_before.csv", row.names = FALSE)
+
+write.csv(summary_after, "summary_after.csv", row.names = FALSE)
 
 
 
@@ -673,56 +677,66 @@ family_count_traitdata <- combined_df_PFT %>%
 
 
 
-# Update the dataset to include full names for PFTs
+# Prepare data
 pft_species_count <- combined_df_PFT %>%
   group_by(PFT) %>%
   summarise(SpeciesCount = n_distinct(AccSpeciesName)) %>%
   mutate(PFT_Full = case_when(
     PFT == "BDT" ~ "Broadleaf Deciduous Trees",
-    PFT == "BET-Tr" ~ "Broadleaf Evergreen Trees (Tropical)",
+    PFT == "BET-Tr" ~ "Tropical Broadleaf Evergreen Trees",
     PFT == "C3" ~ "C3 Grasses",
     PFT == "C4" ~ "C4 Grasses",
     PFT == "DSH" ~ "Deciduous Shrubs",
     PFT == "ESH" ~ "Evergreen Shrubs",
     PFT == "NET" ~ "Needleleaf Evergreen Trees",
-    TRUE ~ PFT  # Default case if there are unhandled PFTs
-  ))
+    TRUE ~ PFT
+  )) %>%
+  arrange(desc(SpeciesCount)) %>%
+  mutate(index = row_number())  # numeric x-axis
 
-# Plot the bar chart using the full PFT names for the legend
-bar_chart <- ggplot(pft_species_count, aes(x = PFT, y = SpeciesCount, fill = PFT_Full)) +
-  geom_bar(stat = "identity", width = 0.7) +
-  labs(x = "Plant Functional Types (PFTs)",
-       y = "Number of Unique Species",
-       fill = "PFT Categories") +  # Rename legend title
-  scale_fill_viridis_d() +
+# Plot using numeric index to control spacing
+bar_chart <- ggplot(pft_species_count, aes(x = index, y = SpeciesCount)) +
+  geom_col(width = 0.9, fill = "grey30") +
+  scale_x_continuous(breaks = pft_species_count$index, labels = pft_species_count$PFT_Full) +
+  labs(
+    x = "Plant Functional Types (PFTs)",
+    y = "Number of Unique Species"
+  ) +
   theme_minimal() +
   theme(
-    legend.text = element_text(size = 14),  # Increase legend text size
-    legend.title = element_text(size = 15) # Increase legend title size
-  ) 
+    axis.text.x = element_text(angle = 60, hjust = 1, size = 22),
+    axis.text.y = element_text(size = 20),
+    axis.title = element_text(size = 20),
+    plot.title = element_text(size = 20, face = "bold"),
+    plot.margin = margin(1, 1, 1.5, 1, "cm")
+  )
+
+# Show and save
+print(bar_chart)
+ggsave("PFT_species_fixed_spacing.png", plot = bar_chart, width = 16, height = 16, dpi = 300, bg = "white")
 
 
 
 
 
 # Calculate proportions and labels
-pft_species_count <- combined_df_PFT %>%
-  group_by(PFT) %>%
-  summarise(SpeciesCount = n_distinct(AccSpeciesName)) %>%
-  mutate(
-    Proportion = SpeciesCount / sum(SpeciesCount) * 100,  # Calculate percentage
-    Label = paste0(round(Proportion, 1), "%")  # Create percentage label
-  )
+#pft_species_count <- combined_df_PFT %>%
+ # group_by(PFT) %>%
+  #summarise(SpeciesCount = n_distinct(AccSpeciesName)) %>%
+  #mutate(
+  #  Proportion = SpeciesCount / sum(SpeciesCount) * 100,  # Calculate percentage
+   # Label = paste0(round(Proportion, 1), "%")  # Create percentage label
+ # )
 
-pie_chart <- ggplot(pft_species_count, aes(x = "", y = Proportion, fill = PFT)) +
-  geom_col(color = "black") +
-  geom_text(aes(label = Label), color = c(1, "black", "black", "black", "black", "black", "black"),
-            position = position_stack(vjust = 0.5),
-            show.legend = FALSE) +
-  guides(fill = guide_legend(title = "PFT")) +
-  scale_fill_viridis_d() +
-  coord_polar(theta = "y") + 
-  theme_void()
+#pie_chart <- ggplot(pft_species_count, aes(x = "", y = Proportion, fill = PFT)) +
+ # geom_col(color = "black") +
+ #geom_text(aes(label = Label), color = c(1, "black", "black", "black", "black", "black", "black"),
+ #           position = position_stack(vjust = 0.5),
+ #         show.legend = FALSE) +
+ # guides(fill = guide_legend(title = "PFT")) +
+ # scale_fill_viridis_d() +
+ # coord_polar(theta = "y") + 
+  #theme_void()
 
 
 
