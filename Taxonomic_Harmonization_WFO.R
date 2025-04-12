@@ -57,3 +57,76 @@ write.csv(Mapped_PFT_Harmonized, "Mapped_PFT_Harmonized.csv", row.names = FALSE)
 
 
 write.csv(best_matches, "best_matches.csv", row.names = FALSE)
+
+
+# result summary
+
+table(best_matches$Matched)
+
+
+table(best_matches$taxonomicStatus)
+
+
+table(best_matches$New.accepted)
+
+
+synonyms <- best_matches %>% filter(New.accepted == TRUE)
+nrow(synonyms)
+
+
+unmatched <- best_matches %>% filter(Matched == FALSE)
+nrow(unmatched)
+
+
+summary_table <- best_matches %>%
+  group_by(taxonomicStatus, New.accepted) %>%
+  summarise(count = n(), .groups = "drop")
+
+print(summary_table)
+
+
+
+
+# optional visualization
+
+
+library(ggplot2)
+
+# Summary data
+summary_data <- data.frame(
+  Category = c(
+    "Matched - Accepted",
+    "Matched - Synonym Replaced",
+    "Matched - Unchecked",
+    "Unmatched"
+  ),
+  Count = c(1656, 110, 3, 19)
+)
+
+# Add percentages
+summary_data <- summary_data %>%
+  mutate(Percentage = round(Count / sum(Count) * 100, 1),
+         Label = paste0(Percentage, "%"))
+
+# Plot with percentage labels
+ggplot(summary_data, aes(x = Category, y = Count)) +
+  geom_bar(stat = "identity", fill = "#0072B2", width = 0.7) +
+  geom_text(aes(label = Label), vjust = -0.5, size = 6) +
+  labs(
+    #title = "Taxonomic Harmonization Summary (WorldFlora)",
+    y = "Number of species",
+    x = "Taxonomic status"
+  ) +
+  theme_minimal(base_size = 18) +
+  theme(
+    axis.text.x = element_text(angle = 20, hjust = 1, size = 22),
+    axis.text.y = element_text(size = 22),
+    axis.title.x = element_text(size = 20),
+    axis.title.y = element_text(size = 20),
+    plot.title = element_text(face = "bold", size = 20, hjust = 0.5)
+  )
+
+
+
+
+ggsave("Taxonomic_Harmonization_Summary.png", width = 16, height = 10, dpi = 300, bg="white")
