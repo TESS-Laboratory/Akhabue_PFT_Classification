@@ -1,0 +1,21 @@
+Column Name,Description
+AccSpeciesName,Associated species name from TRY
+AccSpeciesID,TRY species ID
+Genus,Genus name as provided in the original TRY data.
+SpeciesEpithet,Species epithet (second part of the binomial name).
+Family,Family name associated with the species (from TRY).
+PlantGrowthForm,Growth form assigned to species (TRY).
+LeafType,Leaf type (TRY).
+LeafPhenology,Leaf phenological strategy (TRY).
+PhotosyntheticPathway,Dominant photosynthetic pathway (TRY).
+param_count_before,Number of trait parameters available before critical parameter assignment.
+param_count_after,Number of trait parameters available after critical parameter assignment.
+PFT,Assigned Plant Functional Type based on trait values 
+spec.name,Original species name used before harmonization.
+scientificName,Full scientific name with author citation.
+taxonomicStatus,"Status of the name (e.g., accepted, synonym) according to WFO."
+New.accepted,Logical flag indicating whether a new accepted name was assigned (TRUE/FALSE).
+scientificNameAuthorship,Author(s) of the scientific name.
+genus,Genus name from WFO harmonization.
+family,Family name from WFO harmonization.
+taxonID,WFO taxon identifier.
