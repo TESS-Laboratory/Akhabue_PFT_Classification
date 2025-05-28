@@ -20,3 +20,4 @@ The species data is from the TRY data base.
 - Workflow_for_classification.R contains the full processing pipeline for classifying plant species into Plant Functional Types (PFTs). This script brings together the trait data extraction, PFT assignment, and taxonomic harmonization (based on the World Flora Online approach), and generates the final 
   cleaned dataset used for analysis (Mapped_PFT_Harmonized.csv).
 
+- DATA_column_descriptions.csv provides definitions and descriptions for each column in the datasete. This metadata file serves as a reference to understand the contents and structure of the data.
