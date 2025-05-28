@@ -8,7 +8,7 @@ library(tidyr)
 
 # Read and clean data file  ----
 
-Mapped_PFT <- read.csv("Mapped_PFT_data.csv")
+Mapped_PFT <- read_csv("Mapped_PFT_data.csv")
 
 
 # Extract species names from the 'Mapped_PFT' dataframe
@@ -50,6 +50,10 @@ harmonized_info <- best_matches[, selected_columns]
 
 
 Mapped_PFT_Harmonized <- cbind(Mapped_PFT, harmonized_info)
+
+
+Mapped_PFT_Harmonized <- Mapped_PFT_Harmonized %>%
+  select(-count)
 
 
 # Save to file
@@ -100,7 +104,7 @@ summary_data <- data.frame(
     "Matched - Unchecked",
     "Unmatched"
   ),
-  Count = c(1656, 110, 3, 19)
+  Count = c(1652, 109, 3, 24)
 )
 
 # Add percentages
