@@ -1,11 +1,21 @@
-Repo for species classification into different PFT classes in JULES. The species data is from the TRY data base. I am using the categorical table available in JULES to do most of this classification (where available). 
+Repository for species classification into different PFT classes in JULES. The species data is from the TRY data base. 
 
+- The JULES_pub_count.R script: This script uses the europepmc R package to search for publications related to the JULES land surface model in the Europe PubMed Central database. The keyword "JULES land surface model" was used to retrieve relevant literature for background research and citation tracking.
 
-To Do for this repo:
-- Remove old files
-- Add lookup table (csv file) (species ID Old and new, and four critical parameters, and JULES PFT classification)
-- Add script for extracting TRY data from other repo
-- Update readme (incl. one sentence explanation of each file)  
-- Add a (short, ca. 1 sentnade decription in the description field for the repo.  
-- Review retained scripts for comments that you do/dont want to share
-- Make public, and push to Zenodo (Andy can help with this)
+- Mapped_PFT_Harmonized.csv contains the final output of the plant functional type (PFT) mapping and taxonomic harmonization process. Each record includes the mapped PFT, and harmonized species names.
+
+- Mapped_PFT_data.csv contains the initial results of the plant functional type (PFT) mapping based on available trait data and species information.
+
+- TRYdata_analysis.R contains the initial steps for accessing and extracting trait data from the TRY Plant Trait Database using R. The script makes use of methods and examples adapted from the rtry package, which provides a standardized interface to interact with TRY data. This script was used to     
+  retrieve plant trait and species records for subsequent PFT mapping and analysis. 
+  Note: Access to TRY data requires an approved data request and login credentials. 
+
+- Taxonomic_Harmonization_LCVP.R contains an alternative approach for taxonomic harmonization using the Leipzig Catalogue of Vascular Plants (LCVP) via the lcvplants R package. Although this method was tested during the workflow, it was not used in the final analysis. The script is retained here for 
+  reproducibility and as a reference for future comparisons or alternative workflows.
+
+- Taxonomic_Harmonization_WFO.R contains the script used for taxonomic harmonization of species names using the World Flora Online (WFO) database. This method was used in the final workflow to standardize species names, resolve synonyms, and ensure consistency across plant trait records. The harmonized 
+  output served as the basis for the final dataset in Mapped_PFT_Harmonized.csv.
+
+- Workflow_for_classification.R contains the full processing pipeline for classifying plant species into Plant Functional Types (PFTs). This script brings together the trait data extraction, PFT assignment, and taxonomic harmonization (based on the World Flora Online approach), and generates the final 
+  cleaned dataset used for analysis (Mapped_PFT_Harmonized.csv).
+
