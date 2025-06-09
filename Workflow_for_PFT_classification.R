@@ -690,7 +690,7 @@ ggsave("PFT_species_fixed_spacing.png", plot = bar_chart, width = 16, height = 1
 
 # Perform a left join to add PFT information to Trait_species
 # please note that the raw dataset that has trait values is not included in this repository,
-# however, this is a worflow to document the process
+# however, this is a workflow to document the process
 Trait_species_with_PFT <- Trait_species %>%
   left_join(combined_df_PFT %>%
               select(AccSpeciesName, PFT), 
