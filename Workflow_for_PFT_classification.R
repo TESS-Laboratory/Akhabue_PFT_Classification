@@ -642,9 +642,9 @@ family_count_traitdata <- combined_df_PFT %>%
   summarise(count = n()) %>%
   arrange(desc(count)) #note that 2 observations in the combined_df_PFT are without family names 
                       #Eucalyptus PF1 (hybrid E. teriticornis x E. grandis) = 1 count and Ilex sp = 19 count
-                      #after saving this, I have manually included them approriately to their respective family
+                      #after saving this, I have manually included them appropriately to their respective family
                       #other species in the same family are in the dataset and are already accounted for
-                      # so this does not affect the total numbe of family
+                      # so this does not affect the total number of families.
 
 
 
