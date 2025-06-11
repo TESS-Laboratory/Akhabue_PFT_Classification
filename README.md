@@ -1,3 +1,11 @@
+# Critical Classification Parameters Linking Plant Traits to Plant Functional Type in African Ecosystems
+---
+
+This was created by Enimhien (efa206@exeter.ac.uk), Andrew Cunliffe, Karina Bett-Williams, Anna Harper, 
+Petra Holden, and Tom Powell as part of Enimhien’s Doctoral research within the Oppenheimer Programme in 
+African Landscape Systems (OPALS) (https://opals-exeter.org/).
+---
+
 Repository for species classification into different PFT classes in JULES. 
 The species data is from the TRY data base. 
 
@@ -27,12 +35,13 @@ not used in the final analysis. The script is retained here as a reference for
 future comparisons or alternative workflows.
 
 - Taxonomic_Harmonization_WFO.R contains the script used for taxonomic harmonization 
-of species names using the World Flora Online (WFO) database. This method was used
-in the final workflow to standardize species names, resolve synonyms, and ensure 
-consistency across plant trait records. The harmonized output served as the basis 
+of species names using the World Flora Online (WFO) database. The WFO backbone was
+downloaded from www.worldfloraonline.org/downloadData on the 12/04/2025.
+This method was used in the final workflow to standardize species names, resolve synonyms,
+and ensure consistency across plant trait records. The harmonized output served as the basis 
 for the final dataset in Mapped_PFT_Harmonized.csv.
 
-- Workflow_for_classification.R contains the full processing pipeline for classifying
+- Workflow_for_PFT_classification.R contains the full processing pipeline for classifying
 plant species into Plant Functional Types (PFTs). This script brings together the 
 trait data extraction, PFT assignment, and taxonomic harmonization (based on the 
 World Flora Online approach), and generates the final cleaned dataset used for 
