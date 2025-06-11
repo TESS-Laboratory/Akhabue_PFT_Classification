@@ -11,8 +11,8 @@ The species data is from the TRY data base.
 
 - The JULES_pub_count.R script: This script uses the europepmc R package to search 
 for publications related to the JULES land surface model in the Europe PubMed Central 
-database. The keyword "JULES land surface model" was used to retrieve relevant 
-literature for background research and citation tracking.
+database. Keywords were used to retrieve relevant literature for background research
+and citation tracking.
 
 - Mapped_PFT_Harmonized.csv contains the final output of the plant functional type 
 (PFT) mapping and taxonomic harmonization process. Each record includes the mapped 
