@@ -1,6 +1,5 @@
 # Critical Classification Parameters Linking Plant Traits to Plant Functional Type in African Ecosystems
 ---
-
 Repository for species classification into different PFT classes in JULES. 
 The species data is from the TRY data base. 
 
