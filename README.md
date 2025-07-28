@@ -51,3 +51,5 @@ analysis (Mapped_PFT_Harmonized.csv).
 in the dataset. This metadata file serves as a reference to understand the contents 
 and structure of the data.
 
+- Traits_observed_from_TRY_Database.csv provides the list of trait observation requested
+from the TRY database with their acoompanying traid ID as in TRY. 
