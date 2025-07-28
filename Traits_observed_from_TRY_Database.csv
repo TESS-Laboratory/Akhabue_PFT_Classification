@@ -1,0 +1,19 @@
+Trait Name,TRY Trait ID
+"Leaf area (in case of compound leaves undefined if leaf or leaflet, undefined if petiole is in- or excluded)",3114
+"Leaf area (in case of compound leaves: leaf, petiole excluded)",3108
+"Leaf area (in case of compound leaves: leaf, petiole included)",3110
+"Leaf area (in case of compound leaves: leaf, undefined if petiole in- or excluded)",3112
+"Leaf area (in case of compound leaves: leaflet, petiole excluded)",3109
+"Leaf area (in case of compound leaves: leaflet, petiole included)",3111
+"Leaf area (in case of compound leaves: leaflet, undefined if petiole is in- or excluded)",3113
+"Leaf area per leaf dry mass (SLA or 1/LMA) petiole, rhachis and midrib excluded",3086
+Leaf area per leaf dry mass (SLA or 1/LMA): petiole excluded,3115
+Leaf area per leaf dry mass (SLA or 1/LMA): petiole included,3116
+Leaf area per leaf dry mass (SLA or 1/LMA): undefined if petiole is in- or excluded,3117
+Leaf lifespan (longevity),12
+Leaf nitrogen (N) content per leaf,57
+Leaf nitrogen (N) content per leaf area,50
+Leaf nitrogen (N) content per leaf dry mass,14
+Photosynthesis carboxylation capacity (Vcmax) per leaf area (Farquhar model),186
+Photosynthesis carboxylation capacity (Vcmax) per leaf dry mass (Farquhar model),185
+Root rooting depth,6
