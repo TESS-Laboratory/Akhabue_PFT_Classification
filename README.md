@@ -20,7 +20,7 @@ and citation tracking.
 
 - Mapped_PFT_Harmonized.csv contains the final output of the plant functional type 
 (PFT) mapping and taxonomic harmonization process. Each record includes the mapped 
-PFT, and harmonized species names.
+PFT, and harmonized species names. This is the final output product.
 
 - Mapped_PFT_data.csv contains the initial results of the plant functional type 
 (PFT) mapping based on available trait data and species information.
@@ -56,4 +56,4 @@ in the dataset. This metadata file serves as a reference to understand the conte
 and structure of the data.
 
 - Traits_observed_from_TRY_Database.csv provides the list of trait observation requested
-from the TRY database with their acoompanying traid ID as in TRY. 
+from the TRY database with their acoompanying trait ID as in TRY. 
