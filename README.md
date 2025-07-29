@@ -1,4 +1,4 @@
-# Critical Classification Parameters Linking Plant Traits to Plant Functional Type in African Ecosystems
+# Critical Classification Parameters Linking Species to Plant Functional Type in African Ecosystems
 ---
 
 This was created by Enimhien (efa206@exeter.ac.uk), Andrew Cunliffe, Karina Bett-Williams, Anna Harper, 
