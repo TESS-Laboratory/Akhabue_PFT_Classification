@@ -291,7 +291,8 @@ species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Termina
                         "Vitex doniana", "Dalbergia melanixilum", "Entada wahlbergii", "Jasminum grandiflorum", "Julbernardia pellegriniana", "Philenoptera laxiflora",
                         "Millettia griffoniana", "Millettia laurentii", "Millettia usaramensis", "Newtonia paucijuga", "Pterocarpus antunesii", "Senna italica", 
                         "Senna petersiana", "Senna podocarpa", "Senna spectabilis", "Sindoropsis letestui", "Sterculia setigera", "Vitex ferruginea", "Vitex fischeri", 
-                        "Vitex keniensis", "Halogeton alopecuroides", "Stephania cyanantha", "Mezoneuron benthamianum") 
+                        "Vitex keniensis", "Halogeton alopecuroides", "Stephania cyanantha", "Mezoneuron benthamianum", "Zanthoxylum gilletii", "Thilachium africanum",
+                        "Pterygota bequaertii", "Pericopsis elata") 
 
 
 
@@ -392,7 +393,10 @@ species_to_update4 <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mamme
                         "Uvariopsis congolana", "Vernonia zanzibarensis", "Adenia kigogoensis", "Adenia litoralis", "Anthyllis henoniana", "Commiphora saxicola", 
                         "Craterispermum laurinum", "Diospyros elliotii", "Entada gigas", "Jasminum fluminense", "Keetia cornelia", "Newbouldia laevis", "Ononis serrata", 
                         "Otholobium fruticans", "Oxystigma oxyphyllum", "Thespesia garckeana", "Vepris uguenensis", "Vitex rivularis", "Zanthoxylum zanthoxyloides", 
-                        "Lycium shawii", "Adenia cissampeloides", "Cissampelos owariensis", "Pausinystalia pynaertii", "Adenia mcdadiana")
+                        "Lycium shawii", "Adenia cissampeloides", "Cissampelos owariensis", "Pausinystalia pynaertii", "Adenia mcdadiana", "Trichilia prieureana",
+                        "Tessmannia lescrauwaetii", "Synsepalum stipulatum", "Synsepalum cerasiferum", "Scottellia klaineana", "Protorhus longifolia", "Prioria balsamifera",
+                        "Pachyelasma tessmannii", "Oxyanthus speciosus", "Osyris compressa", "Olax subscorpioidea", "Odyendea gabunensis", "Myrsine melanophloeos", "Lovoa trichilioides",
+                        "Guibourtia tessmannii", "Gambeya lacourtiana", "Gambeya boiviniana", "Fillaeopsis discophora", "Autranella congolensis")
 
 
 

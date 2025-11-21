@@ -1,15 +1,14 @@
 # Installing and loading the rtry package ----
 
 install.packages('rtry')
+install.packages('dplyr')
+install.packages(c("data.table", "tidyr", "jsonlite", "curl"))
+
+
+library(dplyr)
 library(rtry)
 packageVersion('rtry')
-if (!require(dplyr)) install.packages('dplyr')
-library(dplyr)
 
-
-install.packages(c("data.table", "dplyr", "tidyr", "jsonlite", "curl"))
-
-packageVersion("rtry")
 
 # Importing and exploring dataset ----
 ## For TRYdata1 ----
@@ -385,8 +384,6 @@ View(TRYdata4_explore_species)
 ## Then sort the output by TraitID using the sortBy argument----
 TRYdata4_explore_anc <- rtry_explore(TRYdata4, DataID, DataName, TraitID, TraitName, sortBy = TraitID)
 View(TRYdata4_explore_anc)
-
-
 
 
 
