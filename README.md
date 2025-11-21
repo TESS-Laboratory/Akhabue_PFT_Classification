@@ -1,10 +1,14 @@
-# Critical Classification Parameters Linking Plant Traits to Plant Functional Type in African Ecosystems
+# Critical Classification Parameters Linking Species to Plant Functional Type in African Ecosystems
 ---
 
 This was created by Enimhien (efa206@exeter.ac.uk), Andrew Cunliffe, Karina Bett-Williams, Anna Harper, 
 Petra Holden, and Tom Powell as part of Enimhien’s Doctoral research within the Oppenheimer Programme in 
 African Landscape Systems (OPALS) (https://opals-exeter.org/).
 ---
+
+The permanent version of this code is available on [![DOI](https://zenodo.org/badge/758078763.svg)](https://doi.org/10.5281/zenodo.16533069)
+
+
 
 Repository for species classification into different PFT classes in JULES. 
 The species data is from the TRY data base. 
@@ -16,7 +20,7 @@ and citation tracking.
 
 - Mapped_PFT_Harmonized.csv contains the final output of the plant functional type 
 (PFT) mapping and taxonomic harmonization process. Each record includes the mapped 
-PFT, and harmonized species names.
+PFT, and harmonized species names. This is the final output product.
 
 - Mapped_PFT_data.csv contains the initial results of the plant functional type 
 (PFT) mapping based on available trait data and species information.
@@ -52,4 +56,4 @@ in the dataset. This metadata file serves as a reference to understand the conte
 and structure of the data.
 
 - Traits_observed_from_TRY_Database.csv provides the list of trait observation requested
-from the TRY database with their acoompanying traid ID as in TRY. 
+from the TRY database with their acoompanying trait ID as in TRY. 
