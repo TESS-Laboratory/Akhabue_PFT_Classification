@@ -6,19 +6,35 @@ library(tidyr)
 
 
 
-# Read and clean data file  ----
+#load and clean trait data from TRY, containing the species for parameter assignment and PFT mapping ----
+#note that the trait observation data has been cleaned in a separate script
 
-Mapped_PFT <- read_csv("Mapped_PFT_data.csv")
+Trait_species <- read_csv("africa_spp_data.csv")
 
 
-# Extract species names from the 'Mapped_PFT' dataframe
-species_list <- Mapped_PFT$AccSpeciesName
+africa_species <- Trait_species %>% 
+  distinct(AccSpeciesName)   # one row per species
+
+
+
+africa_species <- africa_species %>%
+  filter(
+    !str_detect(
+      AccSpeciesName,
+      regex("^\\s*[^\\s]+\\s+(sp\\.?|spp\\.?)\\b", ignore_case = TRUE)
+    )
+  )
+
+
+
+# Extract species names from the dataframe
+species_list <- africa_species$AccSpeciesName
 
 # Download WFO backbone (run this only once)
 WFO.download()
 
 # Load WFO backbone into memory
-WFO.remember()  # assumes 'classification.csv' is in my working directory
+WFO.remember()  # assumes 'classification.csv' is in working directory
 
 # (optional) Clean names to remove authorship or punctuation
 # Only if names include authorship like "(L.) Willd."
@@ -39,9 +55,12 @@ selected_columns <- c(
   "taxonomicStatus", 
   "New.accepted", 
   "scientificNameAuthorship", 
-  "genus", 
+  "genus",
+  "taxonRank",
   "family", 
-  "taxonID"
+  "taxonID",
+  "references",
+  "source"
 )
 
 
@@ -49,18 +68,22 @@ harmonized_info <- best_matches[, selected_columns]
 
 
 
-Mapped_PFT_Harmonized <- cbind(Mapped_PFT, harmonized_info)
+species_Harmonized <- cbind(africa_species, harmonized_info)
 
 
-Mapped_PFT_Harmonized <- Mapped_PFT_Harmonized %>%
-  select(-count)
+species_Harmonized <- species_Harmonized %>%
+  filter(!is.na(genus))
+
+
+
+
 
 
 # Save to file
-write.csv(Mapped_PFT_Harmonized, "Mapped_PFT_Harmonized.csv", row.names = FALSE)
+write.csv(species_Harmonized, "Harmonized_spp.csv", row.names = FALSE)
 
 
-write.csv(best_matches, "best_matches.csv", row.names = FALSE)
+write.csv(best_matches, "best_matches_spp.csv", row.names = FALSE)
 
 
 # result summary
@@ -104,7 +127,7 @@ summary_data <- data.frame(
     "Matched - Unchecked",
     "Unmatched"
   ),
-  Count = c(1652, 109, 3, 24)
+  Count = c(1795, 126, 7, 9)
 )
 
 # Add percentages
@@ -133,4 +156,4 @@ ggplot(summary_data, aes(x = Category, y = Count)) +
 
 
 
-ggsave("Taxonomic_Harmonization_Summary.png", width = 16, height = 10, dpi = 300, bg="white")
+ggsave("Taxonomic_Harmonization.png", width = 16, height = 10, dpi = 300, bg="white")
