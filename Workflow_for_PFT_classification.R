@@ -1,78 +1,66 @@
 # Load packages and library----
 library(tidyverse)
-library(viridis)  # For color scales
+library(viridis)  
 library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
+library(stringr)
 
 
-#load trait data from TRY, containing the species for parameter assignment and PFT mapping ----
-#note that the trait observation data has been cleaned in a separate script
 
-Trait_species <- read_csv("trait_africa.csv")
+# Data load and preparation ----
 
+Trait_species <- read_csv("Harmonized_spp.csv")  # trait data from TRY, containing the species for parameter assignment and PFT mapping
 
-# Other data from csv - This data is the list of species in the trait data not found in the categorical table. 
-# parameter assignment and PFT classification was done outside R
-PFT_CLASS <- read_csv("PFT_CLASS.csv")
+new_pft_class <- read_csv("new_pft_class.csv")   # Other data from csv - This data is the list of species in the trait data not found in the categorical table. 
+                                                # parameter assignment and PFT classification was done manually outside R
 
+Categorical_table <- read_csv("TRY_Categorical_Traits_Lookup_Table.csv") # TRY Categorical Look up table
 
-# load global data - The global trait data for QC purpose
-Global_traitdata <- read_csv("trait_data.csv")
-
-
-# TRY Categorical Look up table
-Categorical_table <- read_csv("TRY_Categorical_Traits_Lookup_Table.csv")
-
-# Keep only the columns needed for the categorical look up table
-vars <- c("AccSpeciesID", "AccSpeciesName", "Genus", "SpeciesEpithet", "Family", "PlantGrowthForm", "LeafType",
-          "LeafPhenology", "PhotosyntheticPathway")
+vars <- c("AccSpeciesID", "AccSpeciesName", "Genus", 
+          "SpeciesEpithet", "Family", "PlantGrowthForm",
+          "LeafType", "LeafPhenology", "PhotosyntheticPathway")    # Keep only the columns needed for the categorical look up table
 
 Categorical_table<- Categorical_table %>% dplyr::select(one_of(vars))
 
 
-
-# Remove rows where AccSpeciesID is 25135 or 62840 - these are duplicates. There may be duplicates in the categorical table, but only these 2 species occur in the trait data, so I have focused on them only
 Categorical_table <- Categorical_table %>%
-  filter(!(AccSpeciesID %in% c(25135, 62840)))
+  filter(!(AccSpeciesID %in% c(25135, 62840)))    # Remove rows where AccSpeciesID is 25135 or 62840 - these are duplicates. 
+                                                  #There may be duplicates in the categorical table, but only these 2 species occur in the trait data, so I have focused on them only
+
+
+Categorical_table <- Categorical_table %>%
+  rename(scientificName = AccSpeciesName)
 
 
 
-# Sort the unique species from my working data ----
-# Count the occurrences of each species from my observation
-species_count_traitdata <- Trait_species %>%
-  group_by(AccSpeciesName) %>%
+## Sort the unique species from my working data ----
+
+species_count_traitdata <- Trait_species %>%   # Count the occurrences of each species from my observation
+  group_by(scientificName) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
 
-# for global trait data
-species_count_traitdataglobal <- Global_traitdata %>%
-  group_by(AccSpeciesName) %>%
+species_count_TRY <- Categorical_table %>%  # for categorical table data
+  group_by(scientificName) %>%
   summarise(count = n()) %>%
   arrange(desc(count))
 
 
-# for categorical table data
-species_count_TRY <- Categorical_table %>%
-  group_by(AccSpeciesName) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
 
 
-# Merge the datasets based on AccSpeciesName
-# The resulting merged_data will contain all rows from species_count_traitdata and only the matching rows from categorical_table
+## Merge the datasets based on species  ----
 
-merged_data <- merge(species_count_traitdata, Categorical_table, by = "AccSpeciesName", all.x = TRUE)
+merged_data <- merge(species_count_traitdata, Categorical_table, by = "scientificName", all.x = TRUE)  # The resulting merged_data will contain all rows from species_count_traitdata and only the matching rows from categorical_table
 
+matched_data <- merge(species_count_traitdata, Categorical_table, by = "scientificName")      # to keep only the species that are found in both datasets, use inner join
 
-# to keep only the species that are found in both datasets, use inner join
-matched_data <- merge(species_count_traitdata, Categorical_table, by = "AccSpeciesName")
-
-
+matched_data <- matched_data %>%
+  mutate(ClimateZone = NA_character_) #add a column for climate zone
 
 
-# before moving forward, sort out the 4 parameters before assignment ----
+## Before moving forward, sort out the 4 parameters before assignment ----
 classification_cols <- c("PlantGrowthForm", "LeafType", "LeafPhenology", "PhotosyntheticPathway")
 
 
@@ -89,18 +77,8 @@ print(summary_table_before)
 
 
 
-
-
-
-# Sort unique values for the other variables in the categorical table eg leaf type, plant growth form, leaf phenology, photosynthetic pathway
-# this is to know the different variables and their individual count
-# this is also important for QC to help indicate for duplicates and solve that problem
-# After the sorting was done, it was easy to identify the species with missing information and what information was needed
-
-
-
-# Assign species to different classification parameter 
-# For plant growth form ----
+# Assign species to different classification parameter ----
+## For plant growth form ----
 species_to_updateTrees <- c("Vitellaria paradoxa", "Pouteria alnifolia", "Scorodophloeus zenkeri", "Triplochiton scleroxylon", "Gymnosporia buxifolia", 
                             "Nesogordonia papaverifera", "Cola gigantea", "Blighia sapida", "Chrysophyllum boivinianum", "Cryptocarya thouvenotii",
                             "Tridesmostemon omphalocarpoides", "Blighia welwitschii", "Tessmannia africana", "Ocotea racemosa", "Strombosia grandifolia", 
@@ -126,19 +104,10 @@ species_to_updateTrees <- c("Vitellaria paradoxa", "Pouteria alnifolia", "Scorod
                             "Adenia kigogoensis", "Adenia litoralis", "Anthyllis henoniana", "Dalbergia melanixilum", "Diospyros elliotii", "Julbernardia pellegriniana", "Keetia cornelia",
                             "Milicia regia", "Millettia griffoniana", "Millettia laurentii", "Millettia usaramensis", "Newbouldia laevis", "Newtonia paucijuga", "Oxystigma oxyphyllum", 
                             "Senna spectabilis", "Sindoropsis letestui", "Sterculia setigera", "Thespesia garckeana", "Vitex fischeri", "Vitex keniensis", 
-                            "Vitex rivularis", "Xanthocercis zambesiaca", "Zanthoxylum zanthoxyloides", "Pausinystalia pynaertii", "Lonchocarpus laxiflorus")
-
-
-
-#matched_data <- matched_data %>%
-  #mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateTrees & PlantGrowthForm == "", 
-                                  #"tree", PlantGrowthForm))
-
-
-
-matched_data <- matched_data %>%
-  mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateTrees & is.na(PlantGrowthForm), 
-                                  "tree", PlantGrowthForm))
+                            "Vitex rivularis", "Xanthocercis zambesiaca", "Zanthoxylum zanthoxyloides", "Pausinystalia pynaertii", "Lonchocarpus laxiflorus", "Zanthoxylum gilletii", "Trichilia prieureana",
+                            "Tessmannia lescrauwaetii", "Synsepalum stipulatum", "Synsepalum cerasiferum", "Scottellia klaineana", "Pterygota bequaertii", "Protorhus longifolia", "Prioria balsamifera",
+                            "Pericopsis elata", "Pachyelasma tessmannii","Odyendea gabunensis", "Myrsine melanophloeos", "Lovoa trichilioides", "Guibourtia tessmannii", "Gambeya lacourtiana",
+                            "Gambeya boiviniana", "Fillaeopsis discophora", "Autranella congolensis")
 
 
 
@@ -170,79 +139,35 @@ species_to_updateShrubs <- c("Lycium shawii", "Haloxylon scoparium", "Helianthem
                              "Jasminum grandiflorum", "Leptadenia arborea", "Philenoptera laxiflora", "Ononis serrata", "Otholobium fruticans", "Pterocarpus antunesii", 
                              "Senna italica", "Senna petersiana", "Senna podocarpa", "Strophanthus hispidus", "Vepris uguenensis", "Vitex ferruginea", "Halogeton alopecuroides", 
                              "Begonia meyeri-johannis", "Scaphopetalum thonneri", "Adenia cissampeloides", "Baissea axillaris", "Hugonia castaneifolia", 
-                             "Mezoneuron benthamianum", "Microglossa pyrifolia", "Adenia mcdadiana", "Alafia microstylis", "Silene succulenta", "Cissus verticillata")
+                             "Mezoneuron benthamianum", "Microglossa pyrifolia", "Adenia mcdadiana", "Alafia microstylis", "Silene succulenta", "Cissus verticillata", "Trichilia rubescens",
+                             "Thilachium africanum", "Oxyanthus speciosus", "Osyris compressa", "Olax subscorpioidea")
 
 
-
-matched_data <- matched_data %>%
-  mutate(PlantGrowthForm = ifelse(AccSpeciesName %in% species_to_updateShrubs & is.na(PlantGrowthForm), 
-                                  "shrub", PlantGrowthForm))
-
-
-
-
-PlantGrowthForm <- matched_data %>%
-  group_by(PlantGrowthForm) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
-
-
-
-
-
-# For Leaf type ----
+## For Leaf type ----
 matched_data$LeafType[is.na(matched_data$LeafType)] <- "broadleaved"
 
 
-LeafType <- matched_data %>%
-  group_by(LeafType) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
-
-
-
-# For leaf phenology ----
+## For leaf phenology ----
 species_to_update1 <- c("Baikiaea plurijuga", "Brachystegia longifolia", "Brachystegia spiciformis", 
                         "Bridelia ferruginea", "Cassia sieberiana", "Combretum glutinosum", "Combretum micranthum", 
                         "Combretum nigricans", "Crossopteryx febrifuga", "Detarium microcarpum", "Dioscorea bulbifera", 
                         "Faidherbia albida", "Flueggea virosa", "Gmelina arborea", "Lannea velutina", 
                         "Lonchocarpus laxiflorus", "Lophira lanceolata", "Milicia excelsa", "Peltophorum africanum", 
-                        "Prosopis africana", "Quercus faginea", "Sterculia tragacantha", "Ximenia americana", "Albizia chinensis")
+                        "Prosopis africana", "Quercus faginea", "Sterculia tragacantha", "Ximenia americana", "Albizia chinensis", "Securidaca longepedunculata")
 
-matched_data <- matched_data %>%
-  mutate(LeafPhenology = ifelse(AccSpeciesName %in% species_to_update1 & LeafPhenology == "deciduous/evergreen", 
-                                "deciduous", LeafPhenology))
 
 
 species_to_update2 <- c("Aspidosperma megalocarpon", "Bauhinia petersiana", "Berchemia zeyheri", "Carapa procera", 
                         "Crassula rupestris", "Gardenia ternifolia", "Isoberlinia doka", "Neoboutonia macrocalyx", 
-                        "Poulsenia armata", "Schotia afra", "Scolopia zeyheri", "Strychnos pungens", "Cordia megalantha")
-
-
-matched_data <- matched_data %>%
-  mutate(LeafPhenology = ifelse(AccSpeciesName %in% species_to_update2 & LeafPhenology == "deciduous/evergreen", 
-                                "evergreen", LeafPhenology))
+                        "Poulsenia armata", "Schotia afra", "Scolopia zeyheri", "Strychnos pungens", "Cordia megalantha", "Zygophyllum prismatocarpum")
 
 
 
 matched_data <- matched_data %>%
-  mutate(LeafPhenology = ifelse(AccSpeciesName == "Pouteria pierrei" & LeafPhenology == "evergreen", 
-                                "deciduous", LeafPhenology))
-
-
-
-matched_data <- matched_data %>%
-  mutate(LeafPhenology = ifelse(AccSpeciesName == "Strophanthus hispidus" & LeafPhenology == "evergreen", 
-                                "deciduous", LeafPhenology))
-
-
-
-
-matched_data <- matched_data %>%
-  mutate(LeafPhenology = ifelse(AccSpeciesName == "Strophanthus sarmentosus" & LeafPhenology == "evergreen", 
-                                "deciduous", LeafPhenology))
-
-
+  mutate(LeafPhenology = ifelse(scientificName %in% c("Pouteria pierrei",
+                                                      "Strophanthus hispidus",
+                                                      "Strophanthus sarmentosus") &
+        LeafPhenology == "evergreen", "deciduous", LeafPhenology))
 
 
 
@@ -293,14 +218,6 @@ species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Termina
                         "Senna petersiana", "Senna podocarpa", "Senna spectabilis", "Sindoropsis letestui", "Sterculia setigera", "Vitex ferruginea", "Vitex fischeri", 
                         "Vitex keniensis", "Halogeton alopecuroides", "Stephania cyanantha", "Mezoneuron benthamianum", "Zanthoxylum gilletii", "Thilachium africanum",
                         "Pterygota bequaertii", "Pericopsis elata") 
-
-
-
-matched_data <- matched_data %>%
-  mutate(LeafPhenology = ifelse(AccSpeciesName %in% species_to_update3 & is.na(LeafPhenology), 
-                                "deciduous", LeafPhenology))
-
-
 
 
 
@@ -400,34 +317,101 @@ species_to_update4 <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mamme
 
 
 
+
+climateTr_species <- c("Acacia auriculiformis", "Acalypha glabrata", "Adenia kigogoensis", "Adenia litoralis", "Afrostyrax lepidophyllus",
+                       "Afzelia africana", "Afzelia bipindensis", "Agarista salicifolia", "Aidia micrantha", "Albizia adianthifolia",
+                       "Albizia gummifera", "Alchornea cordifolia", "Alchornea laxiflora", "Allanblackia floribunda", "Allanblackia stuhlmannii", 
+                       "Allophylus africanus", "Allophylus pervillei", "Aloe littoralis", "Aloe thraskii", "Alstonia boonei", "Amphitecna tuxtlensis",
+                       "Andira inermis", "Angylocalyx pynaertii", "Anisophyllea boehmii", "Annona senegalensis", "Anonidium mannii", "Anthocleista grandiflora", 
+                       "Anthonotha fragrans", "Anthonotha macrophylla", "Antiaris toxicaria", "Antidesma membranaceum", "Antidesma vogelianum", "Aphloia theiformis", 
+                       "Apodocephala pauciflora", "Apodytes dimidiata", "Aspidosperma megalocarpon", "Asteranthe asterias", 
+                       "Aulacocalyx jasminiflora", "Autranella congolensis", "Baikiaea insignis", "Baikiaea robynsii", "Balanites aegyptiaca", "Balanites wilsoniana", 
+                       "Baphia massaiensis", "Baphia wollastonii", "Barteria fistulosa", "Bauhinia petersiana", "Beilschmiedia velutina", "Bellucia grossularioides", 
+                       "Berchemia zeyheri", "Berlinia auriculata", "Bersama abyssinica", "Blighia sapida", "Blighia welwitschii", "Boscia coriacea", "Boscia mossambicensis", 
+                       "Boscia oleoides", "Boscia salicifolia", "Boscia senegalensis", "Bourreria petiolaris", "Brachylaena huillensis", "Brachystegia floribunda", 
+                       "Bridelia cathartica", "Bridelia tulasneana", "Brosimum alicastrum", "Caloncoba welwitschii", "Calotropis procera", "Canarium madagascariense", 
+                       "Canarium schweinfurtii", "Canthium inerme", "Canthium oligocarpum", "Carapa procera", "Carica papaya", "Casearia battiscombei", "Cassipourea euryoides", 
+                       "Cassipourea gummiflua", "Cassipourea malosana", "Cassipourea mollis", "Cassipourea ruwensorensis", "Catunaregam nilotica", "Cavacoa quintasii", 
+                       "Cecropia obtusifolia", "Chassalia umbraticola", "Chytranthus carneus", "Citropsis daweana", "Clausena anisata", "Cleistanthus polystachyus", 
+                       "Cleistanthus schlechteri", "Cleistopholis patens", "Coelocaryon preussii", "Coffea arabica", "Coffea liberica", "Coffea racemosa", "Cojoba arborea", 
+                       "Cola acuminata", "Cola chlamydantha", "Cola congolana", "Cola gigantea","Cola greenwayi", "Cola lateritia", "Cola lepidota", "Cola minor", "Cola pachycarpa", 
+                       "Cola rostrata", "Combretum collinum", "Combretum zeyheri", "Commiphora schimperi", "Copaifera mildbraedii", "Coptosperma nigrescens", "Coptosperma supra-axillare", 
+                       "Cordia dentata", "Cordia megalantha", "Cordia monoica", "Cordyla africana", "Cornus volkensii", "Corymbia citriodora", "Corynanthe pachyceras", "Coula edulis", 
+                       "Craibia brevicaudata", "Craibia zimmermannii", "Croton megalocarpus", "Croton pseudopulchellus", "Croton steenkampianus", "Cryptocarya thouvenotii", 
+                       "Cryptosepalum exfoliatum", "Cussonia sphaerocephala", "Cussonia spicata", "Cylicodiscus gabunensis", "Cynometra alexandri", 
+                       "Cynometra hankei", "Cynometra webberi", "Dalbergia lactea", "Daniellia oliveri", "Dasylepis integra", "Detarium senegalense", "Dialium englerianum", 
+                       "Dialium guineense", "Dialium orientale", "Dialium pachyphyllum", "Dialium schlechteri", "Dichostemma glaucescens", "Didelotia africana", "Diospyros abyssinica", 
+                       "Diospyros barteri", "Diospyros batocana", "Diospyros bipindensis", "Diospyros boala", "Diospyros canaliculata", "Diospyros cinnabarina", "Diospyros confertiflora", 
+                       "Diospyros crassiflora", "Diospyros dendo", "Diospyros elliotii", "Diospyros gabunensis", "Diospyros hoyleana", "Diospyros inhacaensis", "Diospyros kirkii", 
+                       "Diospyros lycioides", "Diospyros mannii", "Diospyros mespiliformis", "Diospyros natalensis", "Diospyros piscatoria", "Diospyros quiloensis", "Diospyros suaveolens", 
+                       "Diospyros whyteana", "Diospyros zombensis", "Discoglypremna caloneura", "Distemonanthus benthamianus", "Dombeya kirkii", "Dovyalis abyssinica", "Dovyalis longispina", 
+                       "Drypetes arguta", "Drypetes gerrardii", "Drypetes natalensis", "Drypetes paxii", "Drypetes reticulata", "Drypetes usambarica", "Dussia mexicana", "Ekebergia capensis", 
+                       "Elaeis guineensis", "Embelia schimperi", "Englerophytum natalense", "Englerophytum oblanceolatum", "Entada louvelii", "Ephippiandra madagascariensis", 
+                       "Eriocoelum microspermum", "Erismadelphus exsul", "Erythrina excelsa", "Erythrococca polyandra", "Erythrophleum ivorense", "Erythrophleum lasianthum", 
+                       "Erythrophleum suaveolens", "Erythroxylum emarginatum", "Eucalyptus alba", "Eucalyptus grandis", "Eucalyptus saligna", 
+                       "Eucalyptus sideroxylon", "Eucalyptus tereticornis", "Eucalyptus urophylla", "Euclea crispa", "Euclea divinorum", "Euclea natalensis", "Euclea racemosa", "Euclea undulata", 
+                       "Eugenia bukobensis", "Eugenia woodii", "Euphorbia cuneata", "Faurea saligna", "Feretia apodanthera", "Ficus craterostoma", 
+                       "Ficus oreodryadum", "Ficus sur", "Ficus thonningii", "Ficus tremula",  "Ficus yoponensis", "Filicium decipiens", "Fillaeopsis discophora", "Flacourtia indica", 
+                       "Funtumia africana", "Funtumia elastica", "Galpinia transvaalica", "Gambeya boiviniana", "Gambeya lacourtiana", "Garcinia afzelii", 
+                       "Garcinia buchananii", "Garcinia epunctata", "Garcinia gerrardii", "Garcinia livingstonei", "Garcinia mannii", "Garcinia ovalifolia", "Garcinia punctata", 
+                       "Garcinia smeathmannii", "Garcinia volkensii", "Gardenia ternifolia", "Gilbertiodendron dewevrei", "Gliricidia sepium", "Greenwayodendron suaveolens", 
+                       "Grevillea robusta", "Grewia bicolor", "Grewia forbesii", "Grewia holstii", "Grewia monticola", "Grewia similis", "Guarea guidonia", "Guibourtia coleosperma", 
+                       "Guibourtia tessmannii", "Gymnosporia buxifolia", "Gymnosporia mossambicensis", "Haplocoelum inoploeum", "Harrisonia abyssinica", "Harungana madagascariensis", 
+                       "Heinsenia diervilleoides", "Heisteria parvifolia", "Heliocarpus appendiculatus", "Hexalobus crispiflorus", "Hippobromus pauciflorus", "Holarrhena floribunda", 
+                       "Hunteria zeylanica", "Hylodendron gabunense", "Hymenaea verrucosa", "Hymenocardia ulmoides", "Hymenostegia pellegrinii", "Hypericum revolutum", "Hyphaene thebaica", 
+                       "Hypodaphnis zenkeri", "Ilex mitis", "Inga sinacae", "Inhambanella henriquezii", "Irvingia gabonensis", "Irvingia robur", "Isoberlinia doka", "Isoberlinia scheffleri", 
+                       "Isolona thonneri", "Julbernardia paniculata", "Julbernardia seretii", "Keetia cornelia", "Keetia zanzibarica", "Khaya ivorensis", "Khaya senegalensis", 
+                       "Kigelia africana", "Labramia louvelii", "Landolphia buchananii", "Landolphia owariensis", "Lasianthus kilimandscharicus", "Lasiodiscus mannii", "Lecaniodiscus cupanioides", 
+                       "Lepidotrichilia volkensii", "Lepisanthes senegalensis", "Leptaulus daphnoides", "Leptonychia usambarensis", "Leucaena leucocephala", "Librevillea klainei", "Lonchocarpus capassa", 
+                       "Lophira alata", "Lovoa trichilioides", "Macaranga barteri", "Macaranga conglomerata", "Macaranga kilimandscharica", "Maerua crassifolia", "Maerua kirkii", "Mammea africana", 
+                       "Mammea bongo", "Manilkara mochisia", "Manilkara sansibarensis", "Manilkara sulcata", "Mansonia altissima", "Maranthes glabra", "Mareya micrantha", "Markhamia lutea", 
+                       "Marquesia macroura", "Maytenus procumbens", "Medusandra richardsiana", "Milicia regia", "Millettia dura", "Millettia ferruginea", "Mimusops obovata", "Mimusops obtusifolia", 
+                       "Mimusops zeyheri", "Monanthotaxis fornicata", "Monanthotaxis parvifolia", "Monodora grandidieri", "Monodora myristica", "Monotes africanus", "Monotes glaber", 
+                       "Morinda lucida", "Musanga cecropioides", "Myrianthus arboreus", "Mystroxylon aethiopicum", "Napoleonaea imperialis", "Nauclea diderrichii", "Nauclea latifolia", "Neoboutonia macrocalyx", 
+                       "Nesogordonia holtzii", "Newbouldia laevis", "Newtonia hildebrandtii", "Nuxia capitata", "Nuxia congesta", "Ochna inermis", "Ochna natalitia", "Ochna pulchra", "Ochna schweinfurthiana", 
+                       "Ochroma pyramidale", "Ocotea auriculiformis", "Ocotea gabonensis", "Ocotea racemosa", "Octoknema borealis", "Odyendea gabunensis", "Olea europaea", "Olea exasperata", "Olea woodiana", 
+                       "Omphalocarpum elatum", "Oncinotis tenuiloba", "Oncoba routledgei", "Oncostemum botryoides", "Ongokea gore", "Ophiobotrys zenkeri", "Opilia campestris", "Ozoroa engleri", "Ozoroa paniculosa", 
+                       "Pachyelasma tessmannii", "Pancovia golungensis", "Pancovia turbinata", "Panda oleosa", "Pappea capensis", "Paramacrolobium coeruleum", "Paraserianthes lophantha", "Parinari curatellifolia", 
+                       "Parinari excelsa", "Pentaclethra macrophylla", "Pentadesma grandifolia", "Persea americana", "Petersianthus macrocarpus", "Phyllanthus reticulatus", "Piliostigma reticulatum", 
+                       "Piptadeniastrum africanum", "Pittosporum undulatum", "Pleiocarpa pycnantha", "Pleurostylia africana", "Poga oleosa", "Polyscias albersiana", "Polyscias fulva", "Portulacaria afra", 
+                       "Poulsenia armata", "Pouteria sapota", "Premna maxima", "Prioria balsamifera", "Prioria oxyphylla", "Protomegabaria stapfiana", "Prunus africana", "Psychotria capensis", "Pterocarpus santalinoides",
+                       "Pterocarpus soyauxii", "Ptychopetalum petiolatum", "Pycnanthus angolensis", "Pyrostria bibracteata", "Rauvolfia vomitoria", "Rawsonia lucida", "Rhigozum zambesiacum", "Rinorea ilicifolia",
+                       "Rinorea welwitschii", "Rothmannia engleriana", "Rothmannia globosa", "Rothmannia manganjae", "Rytigynia uhligii", "Saba comorensis", "Saba senegalensis", "Salacia leptoclada", "Salvadora persica", 
+                       "Schotia afra", "Schotia brachypetala", "Scolopia zeyheri", "Scorodophloeus zenkeri", "Scottellia klaineana", "Scyphocephalium mannii", "Senna siamea","Sesbania sesban", "Sideroxylon inerme",
+                       "Sloanea rhodantha", "Sorindeia madagascariensis", "Spathodea campanulata", "Spirostachys africana", "Staudtia kamerunensis", "Streblus dimepate", "Strephonema pseudocola", "Strombosia grandifolia", 
+                       "Strombosia pustulata", "Strombosia scheffleri", "Strombosiopsis tetrandra", "Strychnos decussata", "Strychnos henningsii", "Strychnos pungens", "Suregada zanzibariensis", "Symphonia globulifera", 
+                       "Synsepalum brevipes", "Synsepalum cerasiferum", "Synsepalum stipulatum", "Syzygium cordatum", "Syzygium guineense", "Syzygium jambos", "Syzygium parvifolium", "Syzygium sclerophyllum", 
+                       "Tabernaemontana crassa", "Tabernaemontana pachysiphon","Tabernaemontana stapfiana", "Tamarindus indica", "Tambourissa thouvenotii", "Tarchonanthus camphoratus", 
+                       "Terminalia sambesiaca", "Terminalia superba", "Tessmannia africana", "Tessmannia lescrauwaetii", "Tetraberlinia bifoliolata", "Tetrapleura tetraptera","Tetrorchidium didymostemon",
+                       "Thespesia garckeana", "Thomandersia laurifolia", "Tiliacora funifera", "Treculia obovoidea", "Trichilia capitata", "Trichilia dregeana", "Trichilia emetica", "Trichilia monadelpha",
+                       "Trichilia prieureana", "Trichilia welwitschii", "Trichoscypha patens", "Tridesmostemon omphalocarpoides", "Trilepisium madagascariense", "Turraea holstii", "Turraeanthus africanus", 
+                       "Uapaca guineensis", "Uapaca kirkiana", "Uapaca louvelii", "Uapaca nitida", "Uapaca staudtii", "Umtiza listeriana", "Uvariopsis congensis", "Vepris lanceolata", "Vepris trichocarpa", 
+                       "Vitellaria paradoxa", "Vitex grandifolia", "Vitex rivularis", "Vochysia guatemalensis", "Warburgia ugandensis", "Xanthocercis zambesiaca", "Xylopia aethiopica", 
+                       "Xylopia arenaria","Xylopia odoratissima", "Xylopia quintasii", "Xylopia staudtii", "Xymalos monospora", "Zanthoxylum capense", "Zanthoxylum zanthoxyloides", "Ziziphus abyssinica",
+                       "Anthyllis henoniana", "Brachylaena discolor", "Melanophylla crenata")
+
+
+
+climateTe_species <- c("Acacia dealbata", "Acacia saligna", "Afrocarpus falcatus", "Brabejum stellatifolium", "Brachylaena neriifolia", 
+                       "Buddleja saligna", "Burchellia bubalina", "Buxus macowanii", "Calodendrum capense", "Cunonia capensis", "Curtisia dentata", "Diospyros dichrophylla", 
+                       "Elaeodendron croceum", "Eucalyptus cladocalyx", "Eucalyptus conferruminata", "Ficalhoa laurifolia", "Freylinia lanceolata", "Gonioma kamassi", 
+                       "Halleria lucida", "Hyperacanthus amoenus", "Kiggelaria africana", "Leucosidea sericea", "Maytenus oleoides", "Myrsine melanophloeos", 
+                       "Ochna arborea", "Ochna holstii", "Ocotea bullata", "Olea capensis", "Olinia rochetiana", "Olinia ventosa", "Platylophus trifoliatus", "Podocarpus elongatus",
+                       "Podocarpus latifolius", "Protorhus longifolia", "Ptaeroxylon obliquum", "Pterocelastrus tricuspidatus", "Quercus ilex", "Quercus suber", "Rhamnus prinoides",
+                       "Scolopia mundii", "Trichocladus crinitus", "Trichocladus ellipticus", "Virgilia oroboides", "Faurea macnaughtonii") 
+
+
+
+## For Photosynthetic pathway C3 and C4 ----
 matched_data <- matched_data %>%
-  mutate(LeafPhenology = ifelse(AccSpeciesName %in% species_to_update4 & is.na(LeafPhenology), 
-                                "evergreen", LeafPhenology))
-
-
-
-
-
-LeafPhenology <- matched_data %>%
-  group_by(LeafPhenology) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
-
-
-
-
-
-
-
-# For Photosynthetic pathway C3 and C4 ----
-matched_data <- matched_data %>%
-  mutate(PhotosyntheticPathway = ifelse(AccSpeciesName =="Chenopodium album" & PhotosyntheticPathway == "C3/C4",
+  mutate(PhotosyntheticPathway = ifelse(scientificName =="Chenopodium album" & PhotosyntheticPathway == "C3/C4",
                                         "C3", PhotosyntheticPathway))
 
 
 matched_data <- matched_data %>%
-  mutate(PhotosyntheticPathway = ifelse(AccSpeciesName =="Euphorbia hirta" & PhotosyntheticPathway == "C3/C4",
+  mutate(PhotosyntheticPathway = ifelse(scientificName =="Euphorbia hirta" & PhotosyntheticPathway == "C3/C4",
                                         "C4", PhotosyntheticPathway))
+
 
 
 species_to_update5 <- c("Agrostis kilimandscharica", "Festuca abyssinica", "Poa leptoclada", "Ehrharta stipoides", 
@@ -436,9 +420,6 @@ species_to_update5 <- c("Agrostis kilimandscharica", "Festuca abyssinica", "Poa 
                         "Actiniopteris radiata", "Asplenium friesiorum", "Dryopteris kilemensis", "Pteris catoptera",
                         "Selaginella kraussiana")
 
-matched_data <- matched_data %>% 
-  mutate (PhotosyntheticPathway = ifelse(AccSpeciesName %in% species_to_update5 & is.na(PhotosyntheticPathway), 
-                                         "C3", PhotosyntheticPathway))
 
 
 species_to_update6 <- c("Andropogon pinguipes", "Aristida adoensis", "Carex aethiopica", "Uncinia compacta", 
@@ -446,34 +427,79 @@ species_to_update6 <- c("Andropogon pinguipes", "Aristida adoensis", "Carex aeth
                         "Digitaria pearsonii", "Tristachya biseriata", "Schmidtia kalahariensis", "Hyparrhenia confinis", 
                         "Chrysopogon plumulosus", "Chloris mossambicensis")
 
-matched_data <- matched_data %>% 
-  mutate (PhotosyntheticPathway = ifelse(AccSpeciesName %in% species_to_update6 & is.na(PhotosyntheticPathway), 
-                                         "C4", PhotosyntheticPathway))
-
-PhotosyntheticPathway <- matched_data %>%
-  group_by(PhotosyntheticPathway) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count))
 
 
+
+## bring together ----
+
+matched_data <- matched_data %>%
+  mutate(
+    # ---- PlantGrowthForm ----
+    PlantGrowthForm = case_when(
+      scientificName %in% species_to_updateTrees  & is.na(PlantGrowthForm) ~ "tree",
+      scientificName %in% species_to_updateShrubs & is.na(PlantGrowthForm) ~ "shrub",
+      TRUE ~ PlantGrowthForm
+    ),
+    
+    # ---- LeafPhenology ----
+    LeafPhenology = case_when(
+      # resolve "deciduous/evergreen"
+      scientificName %in% species_to_update1 & LeafPhenology == "deciduous/evergreen" ~ "deciduous",
+      scientificName %in% species_to_update2 & LeafPhenology == "deciduous/evergreen" ~ "evergreen",
+      
+      # fill in missing values
+      scientificName %in% species_to_update3 & is.na(LeafPhenology) ~ "deciduous",
+      scientificName %in% species_to_update4 & is.na(LeafPhenology) ~ "evergreen",
+      
+      TRUE ~ LeafPhenology
+    ),
+    
+    # ---- ClimateZone ----
+    ClimateZone = case_when(
+      scientificName %in% climateTr_species & is.na(ClimateZone) ~ "tropical",
+      scientificName %in% climateTe_species & is.na(ClimateZone) ~ "temperate",
+      TRUE ~ ClimateZone
+    ),
+    
+    # ---- PhotosyntheticPathway ----
+    PhotosyntheticPathway = case_when(
+      scientificName %in% species_to_update5 & is.na(PhotosyntheticPathway) ~ "C3",
+      scientificName %in% species_to_update6 & is.na(PhotosyntheticPathway) ~ "C4",
+      TRUE ~ PhotosyntheticPathway
+    )
+  )
+
+
+
+
+count_levels <- function(df, col) {
+  df %>%
+    count({{ col }}, name = "count") %>%
+    arrange(desc(count))
+}
+
+PlantGrowthForm        <- count_levels(matched_data, PlantGrowthForm)
+LeafType               <- count_levels(matched_data, LeafType)
+LeafPhenology          <- count_levels(matched_data, LeafPhenology)
+PhotosyntheticPathway  <- count_levels(matched_data, PhotosyntheticPathway)
 
 
 
 # Combine both dataset - combining the matched dataset with complete information and the other data that was sorted outside of R to get the complete species data collected for this study ----
-matched_data <- bind_rows(matched_data, PFT_CLASS)
+
+matched_data <- bind_rows(matched_data, new_pft_class)
 
 
 
 
-# before grouping, I will sort out the parameter assignment after ----
-# This is AFTER – counts what's now filled in (same as above, done assigning)
+# Before grouping, sort out the parameter assignment after ----
+
 matched_data$param_count_after <- apply(matched_data[, classification_cols], 1, function(row) {
   sum(row != "" & !is.na(row))
-})
+})                                 # This is AFTER – counts what's now filled in (same as above, done assigning)
 
 
-# Replace NA values in param_count_before with 0
-matched_data$param_count_before[is.na(matched_data$param_count_before)] <- 0
+matched_data$param_count_before[is.na(matched_data$param_count_before)] <- 0    # Replace NA values in param_count_before with 0
 
 
 summary_before <- matched_data %>%
@@ -489,15 +515,13 @@ summary_after <- matched_data %>%
 summary_combined <- bind_rows(summary_before, summary_after)
 
 
-# export data 
-write.csv(summary_before, "summary_before.csv", row.names = FALSE)
-
-write.csv(summary_after, "summary_after.csv", row.names = FALSE)
+write.csv(summary_combined, "summary_before_after.csv", row.names = FALSE)        # save summary table
 
 
 
-# plot the before and after parameter assignment ----
-ggplot(summary_combined, aes(x = as.numeric(No_of_parameters), y = No_of_species, color = Status)) +
+
+# Plot the before and after parameter assignment ----
+summary_plot <- ggplot(summary_combined, aes(x = as.numeric(No_of_parameters), y = No_of_species, color = Status)) +
   geom_point(size = 3) +
   geom_smooth(se = FALSE, method = "loess", span = 0.6, size = 1.2) +
   scale_x_continuous(breaks = 0:4) +
@@ -524,141 +548,105 @@ ggplot(summary_combined, aes(x = as.numeric(No_of_parameters), y = No_of_species
 
 
 
-ggsave("parameter_assignment_plot.png", width = 16, height = 10, dpi = 300, bg = "white")
+ggsave("summary_plot.png", plot = summary_plot, width = 16, height = 16, dpi = 300, bg = "white")       # save plot
 
 
 
 
-# group species into different PFT classes ----
-# Considering that all my data are from Africa this should be easy to sort out
 
-# Create a new df, sorting out based on the following criteria LeafType, PlantGrowtForm, LeafPhenology, PhotosynthicPathway 
-# (This may not be essential for all the PFT classes; just the grasses)
+# Group species into different PFT classes ----
+# based on the following criteria LeafType, PlantGrowtForm, LeafPhenology, PhotosynthicPathway, ClimateZone (for BET)
 
 
-
-# this is for BET_Tr and BET_Tr---- 
-
-# filter rows based on PlantGrowthForm that is tree or shrub/tree
-PFT_Tree <- matched_data %>%
-  filter(PlantGrowthForm %in% c("tree", 
-                                "shrub/tree"))
-
-# View the filtered data
-#print(PFT_Tree)
-
-
-PFT_Tree_Broadleaf <- PFT_Tree %>%
-  filter(LeafType %in% c("broadleaved"))
-
-
-PFT_Tree_Evergreen <- PFT_Tree_Broadleaf %>%
-  filter(LeafPhenology %in% c("evergreen"))                   # NO. 1+2 BET - Te+Tr
-
-
-PFT_Tree_Evergreen$PFT <- 'BET-Tr'
-
-
-
-# For BDT ----
-PFT_Tree_Deciduous <- PFT_Tree_Broadleaf %>%
-  filter(LeafPhenology %in% c("deciduous"))                   # NO. 3 BDT
-
-PFT_Tree_Deciduous$PFT <- 'BDT'
-
-
-
-# For NET (needle-leaf trees)----
-PFT_Needleleaf <- PFT_Tree %>%
-  filter(LeafType %in% c("scale-shaped",
-                         "needleleaved"))
-
-
-PFT_Needleleaf_Evergreen <- PFT_Needleleaf %>%
-  filter(LeafPhenology %in% c("evergreen"))                   # NO. 4 NET     
-
-PFT_Needleleaf_Evergreen$PFT <- 'NET'
-
-
-
-PFT_Needleleaf_Deciduous <- PFT_Needleleaf %>%
-  filter(LeafPhenology %in% c("deciduous"))                   # NO. 5 NDT So far, no indication that any species in my dataset falls under this class
-
-
-PFT_Needleleaf_Deciduous$PFT <- 'NDT'
+matched_data <- matched_data %>%
+  mutate(
+    PFT = case_when(
+      ## ---- Broadleaf evergreen trees ----
+      PlantGrowthForm %in% c("tree", "shrub/tree") &
+        LeafType == "broadleaved" &
+        LeafPhenology == "evergreen" &
+        ClimateZone == "tropical" ~ "BET-Tr",   # 1
+      
+      PlantGrowthForm %in% c("tree", "shrub/tree") &
+        LeafType == "broadleaved" &
+        LeafPhenology == "evergreen" &
+        ClimateZone == "temperate" ~ "BET-Te",  # 2
+      
+      ## ---- Broadleaf deciduous trees ----
+      PlantGrowthForm %in% c("tree", "shrub/tree") &
+        LeafType == "broadleaved" &
+        LeafPhenology == "deciduous" ~ "BDT",   # 3
+      
+      ## ---- Needleleaf evergreen trees ----
+      PlantGrowthForm %in% c("tree", "shrub/tree") &
+        LeafType %in% c("scale-shaped", "needleleaved") &
+        LeafPhenology == "evergreen" ~ "NET",   # 4
+      
+      ## ---- Needleleaf deciduous trees ----
+      PlantGrowthForm %in% c("tree", "shrub/tree") &
+        LeafType %in% c("scale-shaped", "needleleaved") &
+        LeafPhenology == "deciduous" ~ "NDT",   # 5
+      
+      ## ---- Shrubs ----
+      PlantGrowthForm %in% c("shrub", "herb/shrub") &
+        LeafPhenology == "evergreen" ~ "ESH",   # 6
+      
+      PlantGrowthForm %in% c("shrub", "herb/shrub") &
+        LeafPhenology == "deciduous" ~ "DSH",   # 7
+      
+      ## ---- Grasses ----
+      PlantGrowthForm == "graminoid" &
+        PhotosyntheticPathway %in% c("C3", "C3/CAM") ~ "C3",  # 8
+      
+      PlantGrowthForm == "graminoid" &
+        PhotosyntheticPathway %in% c("C4", "C4/CAM") ~ "C4",  # 9
+      
+      # fallback: keep existing PFT (if it exists) or NA
+      TRUE ~ NA_character_
+    )
+  )
 
 
-
-# For shrubs ----
-PFT_Shrub  <- matched_data %>%
-  filter(PlantGrowthForm %in% c("shrub", "herb", "herb/shrub"))
-
-
-PFT_Shrub_Evergreen <- PFT_Shrub %>%
-  filter(LeafPhenology %in% c("evergreen"))                   # NO. 6 ESH
-
-PFT_Shrub_Evergreen$PFT <- 'ESH'
-
-
-
-PFT_Shrub_Deciduous <- PFT_Shrub  %>%
-  filter(LeafPhenology %in% c("deciduous"))                   # NO. 7 DSH
-
-PFT_Shrub_Deciduous$PFT <- 'DSH'
-
-
-
-# for grasses ----
-PFT_Grass <- matched_data %>%
-  filter(PlantGrowthForm %in% c("graminoid", "fern"))
-
-
-
-PFT_Grass_C3 <- PFT_Grass %>%
-  filter(PhotosyntheticPathway %in% c("C3", "C3/CAM"))        # NO. 8 C3
-
-
-PFT_Grass_C3$PFT <- 'C3'
-
-
-PFT_Grass_C4 <- PFT_Grass %>%
-  filter(PhotosyntheticPathway %in% c("C4", "C4/CAM"))        # NO. 9 C4
-
-PFT_Grass_C4$PFT <- 'C4'
-
-
-
-# add a new column to all of these new df and input the PFT  assigned,
-# after which combine all the df.
-
-
-
-# Combine all data frames into one
-combined_df_PFT <- bind_rows(PFT_Tree_Evergreen, PFT_Tree_Deciduous, PFT_Needleleaf_Evergreen, 
-                             PFT_Needleleaf_Deciduous, PFT_Shrub_Evergreen, PFT_Shrub_Deciduous, 
-                             PFT_Grass_C3, PFT_Grass_C4)
-
+## Filter rows where PFT is NA. These were species that could not be classified ----
+combined_df_PFT <- matched_data %>%
+  filter(!is.na(PFT))
 
 
 # sort out the family name for each classified species
 family_count_traitdata <- combined_df_PFT %>%
   group_by(Family) %>%
   summarise(count = n()) %>%
-  arrange(desc(count)) #note that 2 observations in the combined_df_PFT are without family names 
-                      #Eucalyptus PF1 (hybrid E. teriticornis x E. grandis) = 1 count and Ilex sp = 19 count
-                      #after saving this, I have manually included them appropriately to their respective family
-                      #other species in the same family are in the dataset and are already accounted for
-                      # so this does not affect the total number of families.
+  arrange(desc(count)) 
 
 
 
+# Merge the datasets based on Species Name
+# The resulting merged_data will contain all rows from combined_df_PFT and only the matching rows from Trait_species
+species_with_PFT  <- merge(combined_df_PFT, Trait_species, by = "scientificName", all.x = TRUE)
+
+
+# remove duplicates
+species_with_PFT <- species_with_PFT %>%
+  distinct(scientificName, .keep_all = TRUE)
+
+
+# clean dataset
+species_with_PFT<- species_with_PFT %>%
+  select(
+    -c(count, AccSpeciesID, Genus, SpeciesEpithet, 
+      Family, count.x, count.y, spec.name))
+
+
+
+# Plot PFT occurrence ----
 # Prepare data
-pft_species_count <- combined_df_PFT %>%
+pft_species_count <- species_with_PFT %>%
   group_by(PFT) %>%
-  summarise(SpeciesCount = n_distinct(AccSpeciesName)) %>%
+  summarise(SpeciesCount = n_distinct(scientificName)) %>%
   mutate(PFT_Full = case_when(
     PFT == "BDT" ~ "Broadleaf Deciduous Trees",
     PFT == "BET-Tr" ~ "Tropical Broadleaf Evergreen Trees",
+    PFT == "BET-Te" ~ "Temperate Broadleaf Evergreen Trees",
     PFT == "C3" ~ "C3 Grasses",
     PFT == "C4" ~ "C4 Grasses",
     PFT == "DSH" ~ "Deciduous Shrubs",
@@ -668,6 +656,10 @@ pft_species_count <- combined_df_PFT %>%
   )) %>%
   arrange(desc(SpeciesCount)) %>%
   mutate(index = row_number())  # numeric x-axis
+
+
+
+
 
 # Plot using numeric index to control spacing
 bar_chart <- ggplot(pft_species_count, aes(x = index, y = SpeciesCount)) +
@@ -686,37 +678,15 @@ bar_chart <- ggplot(pft_species_count, aes(x = index, y = SpeciesCount)) +
     plot.margin = margin(1, 1, 1.5, 1, "cm")
   )
 
-# Show and save
-print(bar_chart)
-ggsave("PFT_species_fixed_spacing.png", plot = bar_chart, width = 16, height = 16, dpi = 300, bg = "white")
+
+ggsave("new_PFT_species_fixed_spacing.png", plot = bar_chart, width = 16, height = 16, dpi = 300, bg = "white")
 
 
-
-# Perform a left join to add PFT information to Trait_species
-# please note that the raw dataset that has trait values is not included in this repository,
-# however, this is a workflow to document the process
-Trait_species_with_PFT <- Trait_species %>%
-  left_join(combined_df_PFT %>%
-              select(AccSpeciesName, PFT), 
-            by = "AccSpeciesName")
-
-
-
-# omit NA data. these are species that could not be classified due to limited information and available resources
-Trait_species_with_PFT <- Trait_species_with_PFT[!is.na(Trait_species_with_PFT$PFT), ]
-
-# remove columns not useful 
-Trait_species_with_PFT <- subset(Trait_species_with_PFT, select = -c(geometry, geo))
+write.csv(species_with_PFT, "PFT_mapped_data.csv", row.names = FALSE)
 
 
 
 
-# export data 
-write.csv(Trait_species_with_PFT, "PFT_trait_data.csv", row.names = FALSE)
 
-
-write.csv(combined_df_PFT, "Mapped_PFT_data.csv", row.names = FALSE)
-
-
-write.csv(pft_species_count, "pft_species_count.csv", row.names = FALSE)
+                                                       # ----------------- END ----------------- #
 
