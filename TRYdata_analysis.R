@@ -146,11 +146,21 @@ rtry_export(num_traits_georef, output_file)
 
 
 
+
 # Sorting Africa data and preparation  ----
+
+
+workdata<- read_csv("workdata_.csv")
+
 
 # Remove unknown species in the AccSpeciesName column
 workdata <- workdata %>%
   filter(AccSpeciesName != "unknown")
+
+
+# Filter out rows where StdValue is less than 0
+workdata <- workdata %>%
+  filter(StdValue > 0)
 
 
 # Keep only the columns needed ----
