@@ -5,6 +5,7 @@ library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
 library(stringr)
+library(dplyr)
 
 
 
@@ -612,13 +613,6 @@ combined_df_PFT <- matched_data %>%
   filter(!is.na(PFT))
 
 
-# sort out the family name for each classified species
-family_count_traitdata <- combined_df_PFT %>%
-  group_by(Family) %>%
-  summarise(count = n()) %>%
-  arrange(desc(count)) 
-
-
 
 # Merge the datasets based on Species Name
 # The resulting merged_data will contain all rows from combined_df_PFT and only the matching rows from Trait_species
@@ -632,9 +626,16 @@ species_with_PFT <- species_with_PFT %>%
 
 # clean dataset
 species_with_PFT<- species_with_PFT %>%
-  select(
+  dplyr::select(
     -c(count, AccSpeciesID, Genus, SpeciesEpithet, 
       Family, count.x, count.y, spec.name))
+
+
+# sort out the family name for each classified species
+family_count_traitdata <- species_with_PFT %>%
+  group_by(family) %>%
+  summarise(count = n()) %>%
+  arrange(desc(count)) 
 
 
 
