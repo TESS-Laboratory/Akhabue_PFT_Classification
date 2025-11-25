@@ -164,7 +164,7 @@ workdata <- workdata %>%
 
 
 # Keep only the columns needed ----
-vars <- c("AccSpeciesName", "TraitName", "UnitName", "Latitude", 
+vars <- c("AccSpeciesName", "TraitName", "StdValue", "UnitName", "Latitude", 
           "Longitude", "Exposition", "Plant_dev_status", "Reference")
 
 workdata<- workdata %>% dplyr::select(one_of(vars))
