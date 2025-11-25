@@ -22,9 +22,6 @@ and citation tracking.
 (PFT) mapping and taxonomic harmonization process. Each record includes the mapped 
 PFT, and harmonized species names. This is the final output product.
 
-- Mapped_PFT_data.csv contains the initial results of the plant functional type 
-(PFT) mapping based on available trait data and species information.
-
 - TRYdata_analysis.R contains the initial steps for accessing and extracting trait
 data from the TRY Plant Trait Database using R. The script makes use of methods and
 examples adapted from the rtry package, which provides a standardized interface to 
