@@ -62,18 +62,17 @@ matched_data <- matched_data %>%
 
 
 ## Before moving forward, sort out the 4 parameters before assignment ----
-classification_cols <- c("PlantGrowthForm", "LeafType", "LeafPhenology", "PhotosyntheticPathway")
+classification_cols <- c("PlantGrowthForm", "LeafType", "LeafPhenology",
+                         "PhotosyntheticPathway", "ClimateZone")
 
+count_params <- function(df, cols) {
+  x <- df[, cols, drop = FALSE]
+  x[] <- lapply(x, \(v) trimws(as.character(v)))  # kill factors + whitespace
+  rowSums(!is.na(x) & x != "")
+}
 
-# This is BEFORE – treating empty strings as missing
-matched_data$param_count_before <- apply(matched_data[, classification_cols], 1, function(row) {
-  sum(row != "" & !is.na(row))  # non-empty and non-NA
-})
+matched_data$param_count_before <- count_params(matched_data, classification_cols)
 
-
-summary_table_before <- as.data.frame(table(matched_data$param_count_before))
-names(summary_table_before) <- c("No_of_parameters", "No_of_species")
-print(summary_table_before)
 
 
 
@@ -495,25 +494,20 @@ matched_data <- bind_rows(matched_data, new_pft_class)
 
 # Before grouping, sort out the parameter assignment after ----
 
-matched_data$param_count_after <- apply(matched_data[, classification_cols], 1, function(row) {
-  sum(row != "" & !is.na(row))
-})                                 # This is AFTER – counts what's now filled in (same as above, done assigning)
-
-
-matched_data$param_count_before[is.na(matched_data$param_count_before)] <- 0    # Replace NA values in param_count_before with 0
-
+matched_data$param_count_after  <- count_params(matched_data, classification_cols)
 
 summary_before <- matched_data %>%
-  count(param_count_before) %>%
-  rename(No_of_parameters = param_count_before, No_of_species = n) %>%
+  count(param_count_before, name = "No_of_species") %>%
+  rename(No_of_parameters = param_count_before) %>%
   mutate(Status = "Before")
 
 summary_after <- matched_data %>%
-  count(param_count_after) %>%
-  rename(No_of_parameters = param_count_after, No_of_species = n) %>%
+  count(param_count_after, name = "No_of_species") %>%
+  rename(No_of_parameters = param_count_after) %>%
   mutate(Status = "After")
 
 summary_combined <- bind_rows(summary_before, summary_after)
+
 
 
 write.csv(summary_combined, "summary_before_after.csv", row.names = FALSE)        # save summary table
@@ -525,7 +519,7 @@ write.csv(summary_combined, "summary_before_after.csv", row.names = FALSE)      
 summary_plot <- ggplot(summary_combined, aes(x = as.numeric(No_of_parameters), y = No_of_species, color = Status)) +
   geom_point(size = 3) +
   geom_smooth(se = FALSE, method = "loess", span = 0.6, size = 1.2) +
-  scale_x_continuous(breaks = 0:4) +
+  scale_x_continuous(breaks = 0:5) +
   scale_y_continuous(breaks = seq(0, 1000, by = 200)) +
   scale_color_manual(
     name = "Parameter information availability",
