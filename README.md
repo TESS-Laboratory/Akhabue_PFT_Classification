@@ -8,8 +8,6 @@ African Landscape Systems (OPALS) (https://opals-exeter.org/).
 
 The permanent version of this code is available on [![DOI](https://zenodo.org/badge/758078763.svg)](https://doi.org/10.5281/zenodo.16533069)
 
-
-
 Repository for species classification into different PFT classes in JULES. 
 The species data is from the TRY data base. 
 
