@@ -682,6 +682,121 @@ write.csv(species_with_PFT, "PFT_mapped_data.csv", row.names = FALSE)
 
 
 
+# plotting PFT occurrence 
+
+df <- tibble::tribble(
+~PFT,      ~previous_table, ~now_assigned,
+"BET-Tr",  NA,              638,
+"BET",     272,             NA,
+"BET-Te",  NA,              48,
+"ESH",     77,              361,
+"BDT",     96,              329,
+"DSH",     8,               100,
+"C4",      72,              97,
+"C3",      7,               22,
+"NET",     5,               8
+)
+
+# Custom y positions: BET trio is tight; others are spaced normally
+pos <- tibble::tribble(
+  ~PFT,     ~y0,
+  "BET-Tr", 1.00,
+  "BET",    1.40,
+  "BET-Te", 1.80,
+  "ESH",    2.60,
+  "BDT",    3.70,
+  "DSH",    4.70,
+  "C4",     5.70,
+  "C3",     6.70,
+  "NET",    7.70
+)
+
+
+df_long <- df %>%
+  pivot_longer(c(previous_table, now_assigned),
+               names_to = "source", values_to = "n") %>%
+  filter(!is.na(n)) %>%
+  mutate(
+    source = recode(source,
+                    previous_table = "Based on previous table",
+                    now_assigned   = "Now assigned"),
+    source = factor(source, levels = c("Now assigned", "Based on previous table"))
+  ) %>%
+  left_join(pos, by = "PFT")
+
+# How many bars exist per PFT? (1 or 2)
+n_src <- df_long %>% count(PFT, name = "n_sources")
+
+bar_h <- 0.32   # thickness of each bar
+lane  <- 0.18   # vertical separation when there are TWO bars
+
+plot_df <- df_long %>%
+  left_join(n_src, by = "PFT") %>%
+  mutate(
+    offset = case_when(
+      n_sources == 2 & source == "Now assigned"            ~ -lane,
+      n_sources == 2 & source == "Based on previous table" ~  lane,
+      TRUE ~ 0   # if only one bar exists for that PFT, keep it centred
+    ),
+    y = y0 + offset,
+    ymin = y - bar_h/2,
+    ymax = y + bar_h/2
+  )
+
+# 1) y-axis labels: remove "BET" only
+y_labels <- pos$PFT
+y_labels[pos$PFT == "BET"] <- ""
+
+
+# 2) a small helper to grab the BET bar endpoint and y position
+bet_bar <- plot_df %>%
+  filter(PFT == "BET") %>%
+  summarise(x = max(n), y = first(y0)) %>%
+  mutate(label = " BET combined")
+
+
+p <- ggplot(plot_df) +
+  geom_rect(aes(xmin = 0, xmax = n, ymin = ymin, ymax = ymax, fill = source),
+            colour = "black") +
+  geom_text(
+    data = bet_bar,
+    aes(x = x, y = y, label = label),
+    inherit.aes = FALSE,
+    hjust = -0.1, vjust = 0.5,
+    fontface = "bold",
+    size = 5
+  ) +
+  scale_fill_manual(values = c("Now assigned" = "grey70",
+                               "Based on previous table" = "white")) +
+  scale_x_continuous(limits = c(0, NA), expand = c(0, 0)) +
+  scale_y_continuous(
+    breaks = pos$y0, labels = y_labels,
+    expand = expansion(add = 0.1)
+  ) +
+  coord_cartesian(clip = "off") +   # allows text outside plotting area
+  labs(x = "Number of species", y = "PFT", fill = NULL) +
+  theme_classic() +
+  theme(
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(5.5, 30, 5.5, 20),                # extra left margin (optional)
+    axis.title.x = element_text(size = 18, face = "bold"),
+    axis.title.y = element_text(size = 18, face = "bold"),
+    axis.text.x  = element_text(size = 16, face = "bold"),
+    axis.text.y  = element_text(size = 16, face = "bold", margin = margin(r = 9)), # space between labels and axis line
+    legend.text = element_text(size = 14, face = "bold")
+  )
+
+
+
+# high-quality PNG
+ggsave("PFT_barplot.png", plot = p, width = 16, height = 8, units = "in", dpi = 600)
+
+# OR best for papers (vector PDF)
+ggsave("PFT_barplot.pdf", plot = p, width = 16, height = 8, units = "in")
+
+
+
+
 
                                                        # ----------------- END ----------------- #
 
