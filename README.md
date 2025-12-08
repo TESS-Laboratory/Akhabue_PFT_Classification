@@ -1,7 +1,7 @@
 # Critical Classification Parameters Linking Species to Plant Functional Type in African Ecosystems
 ---
 
-This was created by Enimhien (efa206@exeter.ac.uk), Andrew Cunliffe, Karina Bett-Williams, Anna Harper, 
+This was created by Enimhien (efa206@exeter.ac.uk), Andrew Cunliffe, Karina Bett-Williams, Anna B. Harper, 
 Petra Holden, and Tom Powell as part of Enimhien’s Doctoral research within the Oppenheimer Programme in 
 African Landscape Systems (OPALS) (https://opals-exeter.org/).
 ---
