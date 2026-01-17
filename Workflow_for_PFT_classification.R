@@ -78,7 +78,15 @@ matched_data$param_count_before <- count_params(matched_data, classification_col
 
 
 # Assign species to different classification parameter ----
+# ---- Curated overrides for ambiguous/missing categorical traits ----
+# Motivation: Some TRY categorical traits are missing (NA) or ambiguous (e.g., "deciduous/evergreen").
+# These curated species lists apply targeted updates based on evidence documented in the manuscript.
+
+
 ## For plant growth form ----
+
+#Species whose growth form is Tree are added to this list
+
 species_to_updateTrees <- c("Vitellaria paradoxa", "Pouteria alnifolia", "Scorodophloeus zenkeri", "Triplochiton scleroxylon", "Gymnosporia buxifolia", 
                             "Nesogordonia papaverifera", "Cola gigantea", "Blighia sapida", "Chrysophyllum boivinianum", "Cryptocarya thouvenotii",
                             "Tridesmostemon omphalocarpoides", "Blighia welwitschii", "Tessmannia africana", "Ocotea racemosa", "Strombosia grandifolia", 
@@ -111,6 +119,7 @@ species_to_updateTrees <- c("Vitellaria paradoxa", "Pouteria alnifolia", "Scorod
 
 
 
+#species whose growth form is shrubs are added to this list
 
 species_to_updateShrubs <- c("Lycium shawii", "Haloxylon scoparium", "Helianthemum lippii", "Gymnosporia senegalensis", "Koelpinia linearis", "Protea cynaroides", 
                              "Notoceras bicorne", "Protea punctata", "Protea mundii", "Protea longifolia", "Melhania velutina", "Protea eximia", "Protea coronata", 
@@ -146,9 +155,17 @@ species_to_updateShrubs <- c("Lycium shawii", "Haloxylon scoparium", "Helianthem
 ## For Leaf type ----
 matched_data$LeafType[is.na(matched_data$LeafType)] <- "broadleaved"
 
+#LeafType_species_broadleaved_candidates <- c()  ---- a list to include broadleaved candidate
+#LeafType_species_needleleaved_candidates <- c() ---- a list to include needleleaved candidate
+
+
 
 ## For leaf phenology ----
-species_to_update1 <- c("Baikiaea plurijuga", "Brachystegia longifolia", "Brachystegia spiciformis", 
+# Some TRY categorical assignments are ambiguous (e.g., deciduous/evergreen) 
+# and these lists phenology_mixed_deciduous_candidates and phenology_mixed_evergreen_candidates was to fix the ambiguity
+# Species labelled as "deciduous/evergreen" in TRY, updated to "deciduous" or "evergreen" based on evidence documented in manuscript.
+
+phenology_mixed_deciduous_candidates <- c("Baikiaea plurijuga", "Brachystegia longifolia", "Brachystegia spiciformis", 
                         "Bridelia ferruginea", "Cassia sieberiana", "Combretum glutinosum", "Combretum micranthum", 
                         "Combretum nigricans", "Crossopteryx febrifuga", "Detarium microcarpum", "Dioscorea bulbifera", 
                         "Faidherbia albida", "Flueggea virosa", "Gmelina arborea", "Lannea velutina", 
@@ -157,7 +174,7 @@ species_to_update1 <- c("Baikiaea plurijuga", "Brachystegia longifolia", "Brachy
 
 
 
-species_to_update2 <- c("Aspidosperma megalocarpon", "Bauhinia petersiana", "Berchemia zeyheri", "Carapa procera", 
+phenology_mixed_evergreen_candidates <- c("Aspidosperma megalocarpon", "Bauhinia petersiana", "Berchemia zeyheri", "Carapa procera", 
                         "Crassula rupestris", "Gardenia ternifolia", "Isoberlinia doka", "Neoboutonia macrocalyx", 
                         "Poulsenia armata", "Schotia afra", "Scolopia zeyheri", "Strychnos pungens", "Cordia megalantha", "Zygophyllum prismatocarpum")
 
@@ -171,7 +188,10 @@ matched_data <- matched_data %>%
 
 
 
-species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Terminalia avicennioides", 
+
+
+
+phenology_NA_to_deciduous_candidates <- c("Markhamia obtusifolia", "Monodora angolensis", "Terminalia avicennioides", 
                         "Terminalia brachystemma", "Terminalia mollis", "Terminalia prunioides", 
                         "Vepris zambesiaca", "Maerua angolensis", "Maerua prittwitzii", "Maesopsis eminii",
                         "Monodora junodii", "Nectaropetalum kaessneri", "Newtonia buchananii",
@@ -222,7 +242,7 @@ species_to_update3 <- c("Markhamia obtusifolia", "Monodora angolensis", "Termina
 
 
 
-species_to_update4 <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mammea bongo", "Manilkara sansibarensis", 
+phenology_NA_to_evergreen_candidates <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mammea bongo", "Manilkara sansibarensis", 
                         "Maranthes glabra", "Mareya micrantha", "Melanophylla crenata", "Mimusops obtusifolia", 
                         "Monodora grandidieri", "Morinda lucida", "Aphloia theiformis", "Trilepisium madagascariense", 
                         "Bridelia cathartica", "Gilbertiodendron dewevrei", "Tabernaemontana stapfiana", "Hypericum revolutum",
@@ -318,7 +338,12 @@ species_to_update4 <- c("Terminalia sambesiaca", "Terminalia sambesiaca", "Mamme
 
 
 
-climateTr_species <- c("Acacia auriculiformis", "Acalypha glabrata", "Adenia kigogoensis", "Adenia litoralis", "Afrostyrax lepidophyllus",
+
+## For climatic zone ----
+
+# species whose climatic zone is tropical
+
+climate_species_tropical_candidates <- c("Acacia auriculiformis", "Acalypha glabrata", "Adenia kigogoensis", "Adenia litoralis", "Afrostyrax lepidophyllus",
                        "Afzelia africana", "Afzelia bipindensis", "Agarista salicifolia", "Aidia micrantha", "Albizia adianthifolia",
                        "Albizia gummifera", "Alchornea cordifolia", "Alchornea laxiflora", "Allanblackia floribunda", "Allanblackia stuhlmannii", 
                        "Allophylus africanus", "Allophylus pervillei", "Aloe littoralis", "Aloe thraskii", "Alstonia boonei", "Amphitecna tuxtlensis",
@@ -392,7 +417,12 @@ climateTr_species <- c("Acacia auriculiformis", "Acalypha glabrata", "Adenia kig
 
 
 
-climateTe_species <- c("Acacia dealbata", "Acacia saligna", "Afrocarpus falcatus", "Brabejum stellatifolium", "Brachylaena neriifolia", 
+
+
+
+# species whose climatic zone is temperate
+
+climate_species_temperate_candidates <- c("Acacia dealbata", "Acacia saligna", "Afrocarpus falcatus", "Brabejum stellatifolium", "Brachylaena neriifolia", 
                        "Buddleja saligna", "Burchellia bubalina", "Buxus macowanii", "Calodendrum capense", "Cunonia capensis", "Curtisia dentata", "Diospyros dichrophylla", 
                        "Elaeodendron croceum", "Eucalyptus cladocalyx", "Eucalyptus conferruminata", "Ficalhoa laurifolia", "Freylinia lanceolata", "Gonioma kamassi", 
                        "Halleria lucida", "Hyperacanthus amoenus", "Kiggelaria africana", "Leucosidea sericea", "Maytenus oleoides", "Myrsine melanophloeos", 
@@ -414,7 +444,7 @@ matched_data <- matched_data %>%
 
 
 
-species_to_update5 <- c("Agrostis kilimandscharica", "Festuca abyssinica", "Poa leptoclada", "Ehrharta stipoides", 
+pathway_c3_candidates <- c("Agrostis kilimandscharica", "Festuca abyssinica", "Poa leptoclada", "Ehrharta stipoides", 
                         "Isachne mauritiana", "Pseudechinolaena polystachya", "Isachne mauritiana", "Poa cookii",
                         "Stipa parviflora", "Stipa tenacissima", "Pseudechinolaena polystachya", "Festuca obturbans",
                         "Actiniopteris radiata", "Asplenium friesiorum", "Dryopteris kilemensis", "Pteris catoptera",
@@ -422,7 +452,7 @@ species_to_update5 <- c("Agrostis kilimandscharica", "Festuca abyssinica", "Poa 
 
 
 
-species_to_update6 <- c("Andropogon pinguipes", "Aristida adoensis", "Carex aethiopica", "Uncinia compacta", 
+pathway_c4_candidates <- c("Andropogon pinguipes", "Aristida adoensis", "Carex aethiopica", "Uncinia compacta", 
                         "Eragrostis patula",  "Cymbopogon pospischilii", "Digitaria abyssinica", 
                         "Digitaria pearsonii", "Tristachya biseriata", "Schmidtia kalahariensis", "Hyparrhenia confinis", 
                         "Chrysopogon plumulosus", "Chloris mossambicensis")
@@ -444,27 +474,33 @@ matched_data <- matched_data %>%
     # ---- LeafPhenology ----
     LeafPhenology = case_when(
       # resolve "deciduous/evergreen"
-      scientificName %in% species_to_update1 & LeafPhenology == "deciduous/evergreen" ~ "deciduous",
-      scientificName %in% species_to_update2 & LeafPhenology == "deciduous/evergreen" ~ "evergreen",
+      scientificName %in% phenology_mixed_deciduous_candidates & LeafPhenology == "deciduous/evergreen" ~ "deciduous",
+      scientificName %in% phenology_mixed_evergreen_candidates & LeafPhenology == "deciduous/evergreen" ~ "evergreen",
       
       # fill in missing values
-      scientificName %in% species_to_update3 & is.na(LeafPhenology) ~ "deciduous",
-      scientificName %in% species_to_update4 & is.na(LeafPhenology) ~ "evergreen",
+      scientificName %in% phenology_NA_to_deciduous_candidates & is.na(LeafPhenology) ~ "deciduous",
+      scientificName %in% phenology_NA_to_evergreen_candidates & is.na(LeafPhenology) ~ "evergreen",
       
       TRUE ~ LeafPhenology
     ),
-    
+    # ---- LeafType ---- 
+    #for Leaf type, comment out if needed.
+    #LeafType = case_when(
+      #scientificName %in% LeafType_species_broadleaved_candidates & is.na(LeafType) ~ "broadleaved",
+      #scientificName %in% LeafType_species_needleleaved_candidates & is.na(LeafType) ~ "needleleaved",
+      #TRUE ~ LeafType
+    #),
     # ---- ClimateZone ----
     ClimateZone = case_when(
-      scientificName %in% climateTr_species & is.na(ClimateZone) ~ "tropical",
-      scientificName %in% climateTe_species & is.na(ClimateZone) ~ "temperate",
+      scientificName %in% climate_species_tropical_candidates & is.na(ClimateZone) ~ "tropical",
+      scientificName %in% climate_species_temperate_candidates & is.na(ClimateZone) ~ "temperate",
       TRUE ~ ClimateZone
     ),
     
     # ---- PhotosyntheticPathway ----
     PhotosyntheticPathway = case_when(
-      scientificName %in% species_to_update5 & is.na(PhotosyntheticPathway) ~ "C3",
-      scientificName %in% species_to_update6 & is.na(PhotosyntheticPathway) ~ "C4",
+      scientificName %in% pathway_c3_candidates & is.na(PhotosyntheticPathway) ~ "C3",
+      scientificName %in% pathway_c4_candidates & is.na(PhotosyntheticPathway) ~ "C4",
       TRUE ~ PhotosyntheticPathway
     )
   )
