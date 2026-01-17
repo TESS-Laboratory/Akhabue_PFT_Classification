@@ -1,5 +1,5 @@
 Column Name,Description
-scientificName,Full scientific name with author citation.
+scientificName,Taxonomically harmonised accepted species scientific name after applying WFO-backbone harmonisation
 PlantGrowthForm,Growth form assigned to species (TRY).
 LeafType,Leaf type (TRY).
 LeafPhenology,Leaf phenological strategy (TRY).
@@ -8,7 +8,7 @@ ClimateZone,climatic classification of species
 param_count_before,Number of trait parameters available before critical parameter assignment.
 param_count_after,Number of trait parameters available after critical parameter assignment.
 PFT,Assigned Plant Functional Type based on trait values 
-AccSpeciesName,Associated species name from TRY
+AccSpeciesName,Species name string as downloaded from TRY (unharmonised). Retained for provenance and reproducibility; may include outdated synonyms/epithets that differ from the harmonised accepted name.
 taxonomicStatus,"Status of the name (e.g., accepted, synonym) according to WFO."
 New.accepted,Logical flag indicating whether a new accepted name was assigned (TRUE/FALSE).
 scientificNameAuthorship,Author(s) of the scientific name.
