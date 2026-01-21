@@ -8,7 +8,7 @@ ClimateZone,climatic classification of species
 param_count_before,Number of trait parameters available before critical parameter assignment.
 param_count_after,Number of trait parameters available after critical parameter assignment.
 PFT,Assigned Plant Functional Type based on trait values 
-AccSpeciesName,Species name string as downloaded from TRY (unharmonised). Retained for provenance and reproducibility; may include outdated synonyms/epithets that differ from the harmonised accepted name.
+AccSpeciesName,Species name string as downloaded from TRY (unharmonized). Retained for provenance and reproducibility; may include outdated synonyms/epithets that differ from the harmonised accepted name.
 taxonomicStatus,"Status of the name (e.g., accepted, synonym) according to WFO."
 New.accepted,Logical flag indicating whether a new accepted name was assigned (TRUE/FALSE).
 scientificNameAuthorship,Author(s) of the scientific name.
@@ -18,3 +18,10 @@ family,Family name from WFO harmonization.
 taxonID,WFO taxon identifier.
 references,references from WFO taxonomic harmonization
 sources,sources from WFO taxonomic harmonization
+PlantGrowth_Source,Source/provenance for the PlantGrowthForm assignment. Values indicate whether the growth-form category was taken directly from the TRY categorical lookup table or derived via multi-source verification (see MULTI_AUTH).
+LeafType_Source,Source/provenance for the LeafType assignment. Values as above.
+LeafPhenology_Source,Source/provenance for the LeafPhenology assignment. Values as above.
+PhotosyntheticPathway_Source,Source/provenance for the PhotosyntheticPathway assignment. Values as above.
+ClimateZone_Source,Source/provenance for the ClimateZone assignment. Values as above.
+,
+MULTI_AUTH,"Parameter value assigned/verified using multiple authoritative sources, including databases and peer-reviewed literature listed in Table 2 of the manuscript (e.g., African Plant Database, World Flora Online, GBIF/iNaturalist where relevant, and publications cited in the reference list). Used when TRY categorical information was missing, incomplete, or ambiguous."
