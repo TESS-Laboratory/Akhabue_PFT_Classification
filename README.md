@@ -9,7 +9,7 @@ The associated paper is; Akhabue, E.F., Cunliffe, A.M., Bett-Williams, K. et al.
 
 ---
 
-The permanent version of this code is available on [![DOI](https://zenodo.org/records/18327543)
+The permanent version of this code is available on [![DOI](https://zenodo.org/badge/758078763.svg)](https://doi.org/10.5281/zenodo.17861027)
 
 Repository for species classification into different PFT classes in JULES. 
 The species data is from the TRY data base. 
