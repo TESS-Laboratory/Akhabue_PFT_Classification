@@ -5,8 +5,11 @@ This was created by Enimhien (efa206@exeter.ac.uk), Andrew Cunliffe, Karina Bett
 Petra Holden, and Tom Powell as part of Enimhien’s Doctoral research within the Oppenheimer Programme in 
 African Landscape Systems (OPALS) (https://opals-exeter.org/).
 ---
+The associated paper is; Akhabue, E.F., Cunliffe, A.M., Bett-Williams, K. et al. Critical classification parameters linking species to Plant Functional Type in African ecosystems. Sci Data 13, 336 (2026). https://doi.org/10.1038/s41597-026-06728-z
 
-The permanent version of this code is available on [![DOI](https://zenodo.org/badge/758078763.svg)](https://doi.org/10.5281/zenodo.17861027)
+---
+
+The permanent version of this code is available on [![DOI](https://zenodo.org/records/18327543)
 
 Repository for species classification into different PFT classes in JULES. 
 The species data is from the TRY data base. 
